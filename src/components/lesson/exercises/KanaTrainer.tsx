@@ -187,7 +187,13 @@ export function KanaTrainer({ exercise, onDone }: { exercise: KanaExercise; onDo
           <div className={`rise flex w-full flex-col items-center gap-1 px-4 py-3 ${ok ? "text-ok" : "bg-as text-ink"}`}>
             {ok ? (
               <p className="flex items-center gap-3 text-[20px] font-bold">
-                Dobrze: <span lang="ja" className="jp">{current.item.kana}</span> = {current.item.romaji}
+                <span>
+                  Dobrze:{" "}
+                  <span lang="ja" className="jp">
+                    {current.item.kana}
+                  </span>{" "}
+                  = {current.item.romaji}
+                </span>
                 <SpeakButton text={current.item.kana} size="sm" />
               </p>
             ) : (

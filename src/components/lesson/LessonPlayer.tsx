@@ -185,7 +185,7 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
             Wstecz
           </button>
           <span className="text-center text-base">
-            {canGoOn ? `Krok ${step} z ${total}` : "Dokończ ćwiczenie, żeby iść dalej"}
+            {canGoOn ? `Krok ${step} z ${total}` : "Najpierw ćwiczenie"}
           </span>
           <button
             type="button"
