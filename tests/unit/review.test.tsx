@@ -40,21 +40,34 @@ describe("cards", () => {
 describe("ReviewSession", () => {
   it("shows empty state without cards", () => {
     render(<ReviewSession />);
-    expect(screen.getByText("Nie masz dziś nic do powtórki.")).toBeInTheDocument();
+    expect(screen.getByText("Nie masz jeszcze nic do powtórki.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /あ・い・う・え・お/ })).toHaveAttribute("href", "/kursy/pismo/hiragana/a-o");
   });
 
   it("rating a card removes it from today's queue", async () => {
-    const p = { ...emptyProgress(), cards: { "word:hon": { card: newCard(new Date(Date.now() - 60_000)), updatedAt: now.toISOString() } } };
+    const p = { ...emptyProgress(), cards: { "word:hon": { card: newCard(new Date(Date.now() - 31 * 60_000)), updatedAt: now.toISOString() } } };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
     const user = userEvent.setup();
     render(<ReviewSession />);
-    expect(screen.getByText("1 do powtórki")).toBeInTheDocument();
+    expect(screen.getByText("Zostało: 1")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Pokaż odpowiedź" }));
     expect(screen.getByText("książka")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /^Dobrze/ }));
-    expect(screen.getByText("Powtórki na dziś zrobione.")).toBeInTheDocument();
+    expect(screen.getByText("Na teraz wszystko powtórzone.")).toBeInTheDocument();
+    expect(screen.getByText(/Następna powtórka za/)).toHaveTextContent("3 godz.");
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
     expect(new Date(saved.cards["word:hon"].card.due).getTime()).toBeGreaterThan(Date.now());
+  });
+
+  it("a card answered Znowu can be taken again at once instead of ending the session", async () => {
+    const p = { ...emptyProgress(), cards: { "word:hon": { card: newCard(new Date(Date.now() - 31 * 60_000)), updatedAt: now.toISOString() } } };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+    const user = userEvent.setup();
+    render(<ReviewSession />);
+    await user.keyboard(" ");
+    await user.keyboard("1");
+    expect(screen.getByText(/Za chwilę wrócą/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Powtórz je teraz" }));
+    expect(screen.getByRole("button", { name: "Pokaż odpowiedź" })).toBeInTheDocument();
   });
 });

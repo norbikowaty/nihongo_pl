@@ -14,6 +14,7 @@ const CardStateSchema = z
     lapses: z.number(),
     state: z.number(),
     last_review: z.string().optional(),
+    stage: z.number().int().optional(),
   })
   .loose();
 

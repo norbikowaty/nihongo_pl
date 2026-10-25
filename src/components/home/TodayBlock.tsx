@@ -7,13 +7,15 @@ import { LessonTitle } from "@/components/lesson/LessonTitle";
 import { courses } from "@/content/catalog";
 import { nextLesson } from "@/lib/lessons";
 import { useProgress } from "@/lib/progress/useProgress";
-import { dueNow } from "@/lib/srs";
+import { dueNow, formatInterval, untilNextDue } from "@/lib/srs";
 
 /** "Today": the next lesson and the reviews due. The server renders the new-visitor version; the browser swaps in saved progress. */
 export function TodayBlock() {
   const { progress } = useProgress();
   const lesson = nextLesson(progress);
   const due = dueNow(progress.cards).length;
+  // Read the clock only with saved cards, so the prerendered page stays static.
+  const wait = due === 0 && Object.keys(progress.cards).length > 0 ? untilNextDue(progress.cards, new Date()) : undefined;
   const started = Object.keys(progress.lessons).length > 0;
 
   const course = lesson && courses.find((c) => c.id === lesson.course);
@@ -61,7 +63,11 @@ export function TodayBlock() {
           <h2 className="text-[22px] font-bold">Powtórki</h2>
           <span className="text-[52px] leading-none font-semibold">{due}</span>
           <span className="text-[17px]">
-            {due === 0 ? "Brak powtórek na dziś" : `około ${Math.max(1, Math.round(due / 2))} min`}
+            {due > 0
+              ? `około ${Math.max(1, Math.round(due / 2))} min`
+              : wait !== undefined
+                ? `następna za ${formatInterval(wait)}`
+                : "Brak powtórek na dziś"}
           </span>
           <div className="mt-auto">
             <Link href="/powtorki" className={`${btnSecondary} no-underline`}>

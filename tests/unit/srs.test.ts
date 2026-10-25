@@ -1,12 +1,44 @@
 import { describe, expect, it } from "vitest";
-import { dueIds, formatInterval, intervalLabel, isDue, newCard, rate } from "@/lib/srs";
+import { dueIds, formatInterval, intervalLabel, isDue, LADDER, LEARNED, newCard, rate, RELEARN, stageOf } from "@/lib/srs";
 
 const now = new Date("2026-10-25T10:00:00Z");
 const DAY = 86_400_000;
 
 describe("srs", () => {
-  it("new card is due immediately", () => {
-    expect(isDue(newCard(now), now)).toBe(true);
+  it("a new card comes back 30 minutes after the lesson", () => {
+    const card = newCard(now);
+    expect(isDue(card, now)).toBe(false);
+    expect(isDue(card, new Date(now.getTime() + LADDER[0]))).toBe(true);
+  });
+
+  it("dobrze climbs the thresholds 30 min, 3 h, 1 day, 3 days, then FSRS takes over", () => {
+    let card = newCard(now);
+    let t = now;
+    const gaps: number[] = [];
+    for (let i = 0; i < 4; i++) {
+      t = new Date(card.due);
+      card = rate(card, "dobrze", t);
+      gaps.push(new Date(card.due).getTime() - t.getTime());
+    }
+    expect(gaps).toEqual([LADDER[1], LADDER[2], LADDER[3], gaps[3]]);
+    expect(stageOf(card)).toBe(LEARNED);
+    expect(gaps[3]).toBeGreaterThanOrEqual(4 * DAY);
+  });
+
+  it("znowu sends the card back to the start in a minute; trudne repeats the same threshold", () => {
+    const climbed = rate(newCard(now), "dobrze", now);
+    const again = rate(climbed, "znowu", now);
+    expect(stageOf(again)).toBe(RELEARN);
+    expect(new Date(again.due).getTime() - now.getTime()).toBe(60_000);
+    expect(stageOf(rate(again, "dobrze", now))).toBe(0);
+    const hard = rate(climbed, "trudne", now);
+    expect(stageOf(hard)).toBe(stageOf(climbed));
+    expect(new Date(hard.due).getTime() - now.getTime()).toBe(LADDER[1]);
+  });
+
+  it("cards saved before the thresholds keep working", () => {
+    const old = { ...rate(newCard(now), "dobrze", now), stage: undefined };
+    expect(stageOf(old)).toBe(LEARNED);
   });
 
   it("rating dobrze moves due into the future", () => {
@@ -51,7 +83,7 @@ describe("srs", () => {
   it("dueIds returns only due cards, oldest first", () => {
     const later = rate(newCard(now), "latwe", now);
     const early = newCard(new Date(now.getTime() - DAY));
-    const fresh = newCard(now);
+    const fresh = newCard(new Date(now.getTime() - LADDER[0]));
     const ids = dueIds({ a: { card: fresh }, b: { card: later }, c: { card: early } }, now);
     expect(ids).toEqual(["c", "a"]);
   });

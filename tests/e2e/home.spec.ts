@@ -26,11 +26,21 @@ test("after the first lesson the home page moves on and shows reviews", async ({
   await expect(page.getByText("Brak powtórek na dziś")).toHaveCount(0);
 });
 
-test("review session works from the home page", async ({ page }) => {
+test("review session works after a lesson", async ({ page }) => {
   await openStep(page, "/kursy/pismo/hiragana/a-o", 5);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
+  await page.goto("/");
+  await expect(page.getByText(/następna za 30 min/)).toBeVisible();
+  // The first review comes 30 minutes after the lesson; move the clock of the saved cards instead of waiting.
+  await page.evaluate(() => {
+    const key = "nihongo-pl:progress";
+    const p = JSON.parse(localStorage.getItem(key)!);
+    for (const c of Object.values(p.cards) as { card: { due: string } }[]) c.card.due = new Date(Date.now() - 1000).toISOString();
+    localStorage.setItem(key, JSON.stringify(p));
+  });
   await page.goto("/powtorki");
   await page.getByRole("button", { name: "Pokaż odpowiedź" }).click();
   await page.getByRole("button", { name: /^Dobrze/ }).click();
-  await expect(page.getByText(/do powtórki/)).toBeVisible();
+  await expect(page.getByText(/Zostało: /)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Progi powtórek" })).toBeVisible();
 });
