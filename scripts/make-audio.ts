@@ -149,8 +149,13 @@ async function main() {
     const file = join(out, `${key}.mp3`);
     const skip = existsSync(file) && !process.argv.includes("--all");
     if (skip && !checkAll) continue;
-    const say = await sayFor(t, speaker.id);
-    const warning = await checkReading(t, say, speaker.id);
+    let say = await sayFor(t, speaker.id);
+    let warning = await checkReading(t, say, speaker.id);
+    // Misread in context (きれいな山 as ざん): voice the whole sentence from its furigana instead.
+    if (warning && t.segs) {
+      say = t.segs.map((s) => s.r ?? s.t).join("").replace(/[＿_]+/g, "");
+      warning = await checkReading(t, say, speaker.id);
+    }
     if (warning) warnings.push(warning);
     if (skip) continue;
     writeFileSync(file, await record(say, speaker.id));
