@@ -5,9 +5,10 @@ import { catalogOrder } from "@/lib/lessons";
 
 const HAN = /\p{Script=Han}/gu;
 
-/** Every kanji in a lesson's text, in order of first use. */
+/** Every kanji shown in a lesson, in order of first use (a word's dictionary form is not shown). */
 export function kanjiIn(lesson: Lesson): string[] {
-  return [...new Set(JSON.stringify([lesson.title, lesson.steps]).match(HAN) ?? [])];
+  const shown = JSON.stringify([lesson.title, lesson.steps], (key, value) => (key === "lemma" ? undefined : value));
+  return [...new Set(shown.match(HAN) ?? [])];
 }
 
 export type NewKanji = Kanji & { example?: { word: string; reading: string } };

@@ -1,4 +1,5 @@
 import type { Word } from "../schema";
+import { segs } from "./gramatyka/make";
 
 const word = (id: string, segs: Word["ja"]["segs"], romaji: string, pl: string): Word => ({
   id,
@@ -10,6 +11,12 @@ const kana = (id: string, text: string, romaji: string, pl: string): Word => wor
 
 /** A word outside N5, there only because no N5 word can be built from the kana learned so far. */
 const extra = (x: Word): Word => ({ ...x, beyondN5: true });
+
+/** Grammar notation "{行|い}きます"; `lemma` is the dictionary form of a word taught conjugated. */
+const jw = (id: string, text: string, romaji: string, pl: string, lemma?: [written: string, reading: string]): Word => ({
+  ...word(id, segs(text), romaji, pl),
+  ...(lemma ? { lemma: { written: lemma[0], reading: lemma[1] } } : {}),
+});
 
 /**
  * Shared vocabulary; ids stay stable because review cards are keyed by them. Checked with scripts/verify-words.ts
@@ -33,6 +40,22 @@ export const w = {
   nihongo: word("nihongo", [{ t: "日本語", r: "にほんご" }], "nihongo", "język japoński"),
   dare: kana("dare", "だれ", "dare", "kto"),
   tomodachi: { ...word("tomodachi", [{ t: "友", r: "とも" }, { t: "だち" }], "tomodachi", "przyjaciel, kolega"), jmdict: "1540170" },
+
+  // Gramatyka: to i tamto
+  sore: kana("sore", "それ", "sore", "to (blisko ciebie)"),
+  are: kana("are", "あれ", "are", "tamto (daleko)"),
+  kono: kana("kono", "この", "kono", "ten, ta, to (blisko mnie)"),
+  sono: kana("sono", "その", "sono", "ten, ta, to (blisko ciebie)"),
+  ano: kana("ano", "あの", "ano", "tamten, tamta, tamto"),
+  soko: kana("soko", "そこ", "soko", "tam (blisko ciebie)"),
+  doko: kana("doko", "どこ", "doko", "gdzie"),
+  daigaku: jw("daigaku", "{大学|だいがく}", "daigaku", "uniwersytet"),
+  kyoshitsu: kana("kyoshitsu", "きょうしつ", "kyōshitsu", "sala lekcyjna"),
+  dore: kana("dore", "どれ", "dore", "który (z kilku)"),
+  donata: kana("donata", "どなた", "donata", "kto (grzecznie)"),
+  kata: { ...kana("kata", "かた", "kata", "osoba (grzecznie)"), lemma: { written: "方", reading: "かた" } },
+  kuni: jw("kuni", "{国|くに}", "kuni", "kraj"),
+  namae: jw("namae", "{名前|なまえ}", "namae", "imię, nazwa"),
 
   // Pismo: hiragana
   au: { ...kana("au", "あう", "au", "spotkać (się)"), jmdict: "1198180" },

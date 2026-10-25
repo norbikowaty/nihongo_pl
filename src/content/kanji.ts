@@ -51,6 +51,10 @@ export const lessonKanji: Kanji[] = [
   k("車", ["シャ"], ["くるま"], "samochód, pojazd", 7),
   k("語", ["ゴ"], ["かた.る"], "język, słowo", 14),
   k("友", ["ユウ"], ["とも"], "przyjaciel", 4),
+  k("大", ["ダイ", "タイ"], ["おお.きい"], "duży, wielki", 3),
+  k("名", ["メイ", "ミョウ"], ["な"], "imię, nazwa", 6),
+  k("前", ["ゼン"], ["まえ"], "przód, przed", 9),
+  k("国", ["コク"], ["くに"], "kraj", 8),
 ];
 
 const byChar = new Map([...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji].map((x) => [x.kanji, x]));

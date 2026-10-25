@@ -11,6 +11,8 @@ export const WordSchema = z.object({
   jmdict: z.string().optional(),
   /** Not on the N5 list: kept only to practise reading new kana, never added to reviews or the N5 dictionary. */
   beyondN5: z.literal(true).optional(),
+  /** Dictionary form when the word is taught conjugated (行きます → 行く), for the JMdict and N5 checks. */
+  lemma: z.object({ written: z.string().min(1), reading: z.string().min(1) }).optional(),
 });
 
 export const ExampleSchema = z.object({ ja: JaTextSchema, pl: z.string().min(1) });

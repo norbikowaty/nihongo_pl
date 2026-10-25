@@ -37,8 +37,9 @@ async function loadJmdict(): Promise<Entry[]> {
   return JSON.parse(readFileSync(join(cache, json), "utf8")).words;
 }
 
-const written = (word: Word) => word.ja.segs.map((s) => s.t).join("");
-const reading = (word: Word) => word.ja.segs.map((s) => s.r ?? s.t).join("");
+// A word taught conjugated (行きます) is checked by its dictionary form (行く).
+const written = (word: Word) => word.lemma?.written ?? word.ja.segs.map((s) => s.t).join("");
+const reading = (word: Word) => word.lemma?.reading ?? word.ja.segs.map((s) => s.r ?? s.t).join("");
 
 async function main() {
   const words = new Map<string, Word>();
