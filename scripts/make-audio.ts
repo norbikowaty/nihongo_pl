@@ -4,6 +4,7 @@
 // Usage: start VOICEVOX, then  npx tsx scripts/make-audio.ts            (record)
 //                              npx tsx scripts/make-audio.ts --list     (only print the texts)
 //                              npx tsx scripts/make-audio.ts --all      (record again what is already recorded)
+//                              npx tsx scripts/make-audio.ts --check    (also check readings of recorded sentences)
 // VOICEVOX_URL  engine address, default http://127.0.0.1:50021
 // VOICEVOX_VOICE  "character/style", default "No.7/アナウンス"; credited on /licencje as VOICEVOX:<character>.
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -78,6 +79,22 @@ async function sayFor(t: Spoken, speaker: number): Promise<string> {
   return parts.join("").replace(/[＿_]+/g, "");
 }
 
+/** Readings compared loosely: particles は, へ, を sound wa, e, o; punctuation, accents and long marks are ignored. */
+const loose = (kana: string) =>
+  asVoiced(kana)
+    .replace(/[^ァ-ヶ]/g, "")
+    .replace(/ハ/g, "ワ")
+    .replace(/ヘ/g, "エ")
+    .replace(/ヲ/g, "オ");
+
+/** A warning when the voice reads a sentence differently from its furigana (e.g. 人 as にん instead of ひと). */
+async function checkReading(t: Spoken, say: string, speaker: number): Promise<string | undefined> {
+  if (!t.segs) return undefined;
+  const expected = t.segs.map((s) => s.r ?? s.t).join("");
+  const heard = String((await query(say, speaker)).kana);
+  return loose(heard) === loose(expected) ? undefined : `SPRAWDŹ  ${t.text}: głos czyta ${heard.replace(/['/_]/g, "")}, furigana ${expected}`;
+}
+
 async function record(text: string, speaker: number): Promise<Buffer> {
   // Slightly slower than normal, mono, with a short pause on both ends.
   const body = { ...(await query(text, speaker)), speedScale: 0.9, outputSamplingRate: 24000, outputStereo: false, prePhonemeLength: 0.1, postPhonemeLength: 0.15 };
@@ -119,10 +136,16 @@ async function main() {
   const before = existsSync(manifest) ? JSON.parse(readFileSync(manifest, "utf8")).voice : "";
   if (before && before !== character) for (const f of readdirSync(out)) rmSync(join(out, f));
   let made = 0;
+  const warnings: string[] = [];
+  const checkAll = process.argv.includes("--check");
   for (const [key, t] of keys) {
     const file = join(out, `${key}.mp3`);
-    if (existsSync(file) && !process.argv.includes("--all")) continue;
+    const skip = existsSync(file) && !process.argv.includes("--all");
+    if (skip && !checkAll) continue;
     const say = await sayFor(t, speaker.id);
+    const warning = await checkReading(t, say, speaker.id);
+    if (warning) warnings.push(warning);
+    if (skip) continue;
     writeFileSync(file, await record(say, speaker.id));
     made++;
     console.log(line(key, t, say));
@@ -136,6 +159,7 @@ async function main() {
   }
   writeFileSync(manifest, `${JSON.stringify({ voice: character, files: [...keys.keys()].sort() }, null, 2)}\n`);
   console.log(`\n${made} recorded, ${removed} removed, ${keys.size} in total (voice VOICEVOX:${character})`);
+  if (warnings.length) console.log(`\n${warnings.join("\n")}`);
 }
 
 main().catch((e) => {
