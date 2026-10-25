@@ -21,7 +21,7 @@ describe("speech", () => {
   });
 
   it.skipIf(recordings.files.length === 0)("every text with a play button has a recording on disk", () => {
-    for (const text of spokenTexts()) expect(hasRecording(text), `run: npx tsx scripts/make-audio.ts (${text})`).toBe(true);
+    for (const { text } of spokenTexts()) expect(hasRecording(text), `run: npx tsx scripts/make-audio.ts (${text})`).toBe(true);
     for (const key of recordings.files as string[]) expect(existsSync(join(process.cwd(), "public", "audio", `${key}.mp3`)), key).toBe(true);
   });
 });

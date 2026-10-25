@@ -35,7 +35,7 @@ export default function LicencjePage() {
         <>
           <h2>Nagrania</h2>
           <p>
-            Wymowa nagrana syntezatorem <a href="https://voicevox.hiroshiba.jp">VOICEVOX</a>. VOICEVOX:{recordings.voice}
+            Wymowa nagrana syntezatorem <a href="https://voicevox.hiroshiba.jp">VOICEVOX</a>. {`VOICEVOX:${recordings.voice}`}
           </p>
         </>
       )}

@@ -3,11 +3,12 @@
 // src/content/audio.json. Texts already recorded are skipped; recordings no longer used are removed.
 // Usage: start VOICEVOX, then  npx tsx scripts/make-audio.ts            (record)
 //                              npx tsx scripts/make-audio.ts --list     (only print the texts)
+//                              npx tsx scripts/make-audio.ts --all      (record again what is already recorded)
 // VOICEVOX_URL  engine address, default http://127.0.0.1:50021
 // VOICEVOX_VOICE  "character/style", default "No.7/アナウンス"; credited on /licencje as VOICEVOX:<character>.
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { spokenTexts } from "../src/lib/audio-texts";
+import { type Spoken, spokenTexts } from "../src/lib/audio-texts";
 import { audioKey } from "../src/lib/speech";
 
 const url = process.env.VOICEVOX_URL ?? "http://127.0.0.1:50021";
@@ -48,15 +49,42 @@ async function toMp3({ samples, rate }: { samples: Int16Array; rate: number }): 
   return Buffer.concat(parts.map((p) => Buffer.from(p.buffer, p.byteOffset, p.byteLength)));
 }
 
-async function record(text: string, speaker: number): Promise<Buffer> {
+const query = async (text: string, speaker: number) => {
   const q = await fetch(`${url}/audio_query?${new URLSearchParams({ text, speaker: String(speaker) })}`, { method: "POST" });
   if (!q.ok) throw new Error(`audio_query ${q.status}: ${text}`);
+  return q.json();
+};
+
+/** カタカナ with long vowels as the voice spells them: せんせい → センセエ, がっこう → ガッコオ. */
+const asVoiced = (kana: string) =>
+  kana
+    .replace(/[ぁ-ゖ]/g, (c) => String.fromCharCode(c.charCodeAt(0) + 0x60))
+    .replace(/([ケセテネヘメレゲゼデベペエ])イ/g, "$1エ")
+    .replace(/([コソトノホモヨロゴゾドボポオョ])ウ/g, "$1オ");
+
+/**
+ * The sentence as written (the voice phrases kanji better than kana), except words it would read
+ * differently from the lesson's furigana, which are given in kana: 何 (なに) → なん, 日本人 (にっぽんじん) → にほんじん.
+ */
+async function sayFor(t: Spoken, speaker: number): Promise<string> {
+  if (!t.segs) return t.say;
+  const parts = await Promise.all(
+    t.segs.map(async (s) => {
+      if (!s.r) return s.t;
+      const heard = String((await query(s.t, speaker)).kana).replace(/['/_、]/g, "");
+      return heard === asVoiced(s.r) ? s.t : s.r;
+    }),
+  );
+  return parts.join("").replace(/[＿_]+/g, "");
+}
+
+async function record(text: string, speaker: number): Promise<Buffer> {
   // Slightly slower than normal, mono, with a short pause on both ends.
-  const query = { ...(await q.json()), speedScale: 0.9, outputSamplingRate: 24000, outputStereo: false, prePhonemeLength: 0.1, postPhonemeLength: 0.15 };
+  const body = { ...(await query(text, speaker)), speedScale: 0.9, outputSamplingRate: 24000, outputStereo: false, prePhonemeLength: 0.1, postPhonemeLength: 0.15 };
   const wav = await fetch(`${url}/synthesis?speaker=${speaker}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(query),
+    body: JSON.stringify(body),
   });
   if (!wav.ok) throw new Error(`synthesis ${wav.status}: ${text}`);
   return toMp3(readWav(Buffer.from(await wav.arrayBuffer())));
@@ -64,14 +92,15 @@ async function record(text: string, speaker: number): Promise<Buffer> {
 
 async function main() {
   const texts = spokenTexts();
-  const keys = new Map<string, string>();
-  for (const text of texts) {
-    const key = audioKey(text);
-    if (keys.has(key)) throw new Error(`Same file name for ${keys.get(key)} and ${text}`);
-    keys.set(key, text);
+  const keys = new Map<string, Spoken>();
+  for (const t of texts) {
+    const key = audioKey(t.text);
+    if (keys.has(key)) throw new Error(`Same file name for ${keys.get(key)!.text} and ${t.text}`);
+    keys.set(key, t);
   }
+  const line = (key: string, t: Spoken, say = t.say) => `${key}  ${t.text}${say !== t.text ? `  (czyta: ${say})` : ""}`;
   if (process.argv.includes("--list")) {
-    for (const [key, text] of keys) console.log(`${key}  ${text}`);
+    for (const [key, t] of keys) console.log(line(key, t));
     console.log(`\n${texts.length} texts`);
     return;
   }
@@ -90,12 +119,13 @@ async function main() {
   const before = existsSync(manifest) ? JSON.parse(readFileSync(manifest, "utf8")).voice : "";
   if (before && before !== character) for (const f of readdirSync(out)) rmSync(join(out, f));
   let made = 0;
-  for (const [key, text] of keys) {
+  for (const [key, t] of keys) {
     const file = join(out, `${key}.mp3`);
-    if (existsSync(file)) continue;
-    writeFileSync(file, await record(text, speaker.id));
+    if (existsSync(file) && !process.argv.includes("--all")) continue;
+    const say = await sayFor(t, speaker.id);
+    writeFileSync(file, await record(say, speaker.id));
     made++;
-    console.log(`${key}  ${text}`);
+    console.log(line(key, t, say));
   }
   let removed = 0;
   for (const f of readdirSync(out)) {
