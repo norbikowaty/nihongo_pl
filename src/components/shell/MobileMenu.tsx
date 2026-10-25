@@ -10,6 +10,24 @@ export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const button = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    // Move focus into the menu, and keep Tab inside it while it is open.
+    const links = () => [...(panel.current?.querySelectorAll<HTMLElement>("a, button") ?? [])];
+    links()[0]?.focus();
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const all = [button.current!, ...links()];
+      const i = all.indexOf(document.activeElement as HTMLElement);
+      const next = e.shiftKey ? (i <= 0 ? all.length - 1 : i - 1) : (i + 1) % all.length;
+      e.preventDefault();
+      all[next]?.focus();
+    };
+    document.addEventListener("keydown", onTab);
+    return () => document.removeEventListener("keydown", onTab);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -37,6 +55,7 @@ export function MobileMenu() {
       </button>
       {open && (
         <div
+          ref={panel}
           id="mobile-menu"
           role="dialog"
           aria-modal="true"
