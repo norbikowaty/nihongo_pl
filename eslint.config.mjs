@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local tooling, not part of the site:
+    ".agents/**",
+    ".claude/**",
+    ".taste-skill/**",
+    ".superpowers/**",
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 

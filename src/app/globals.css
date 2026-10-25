@@ -55,6 +55,38 @@ body {
   font-family: var(--font-jp);
 }
 
+a {
+  color: var(--ink);
+}
+
+a:hover {
+  color: var(--ac);
+}
+
+/* Reading aid: 0 = kanji and kana only, 1 = furigana, 2 = furigana and rōmaji. */
+rt {
+  font-size: 0.45em;
+  color: var(--mu);
+  font-family: var(--font-jp);
+}
+
+.rm {
+  display: none;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--mu);
+  line-height: 1.4;
+}
+
+html[data-reading="0"] rt,
+html[data-reading="0"] .rd {
+  visibility: hidden;
+}
+
+html[data-reading="2"] .rm {
+  display: block;
+}
+
 :focus-visible {
   outline: 3px solid var(--ac);
   outline-offset: 3px;
