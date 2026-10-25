@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Noto_Serif_JP, Source_Serif_4 } from "next/font/google";
+import { Source_Serif_4 } from "next/font/google";
+import localFont from "next/font/local";
 import { Footer } from "@/components/shell/Footer";
 import { Header } from "@/components/shell/Header";
 import { ReadingSync } from "@/components/shell/ReadingSwitch";
@@ -11,10 +12,18 @@ const serif = Source_Serif_4({
   subsets: ["latin", "latin-ext"],
 });
 
-const jp = Noto_Serif_JP({
+// Self-hosted subset of Noto Serif JP with only the characters the site uses (scripts/subset-font.ts).
+// Google's full font ships ~70 KB of @font-face CSS that blocks rendering.
+const jp = localFont({
   variable: "--font-jp-src",
-  weight: ["400", "600"],
+  src: [
+    { path: "../../public/fonts/noto-serif-jp-400.woff2", weight: "400" },
+    { path: "../../public/fonts/noto-serif-jp-600.woff2", weight: "600" },
+  ],
+  display: "swap",
+  // Not preloaded: pages without Japanese (exam, legal) should not wait for it.
   preload: false,
+  fallback: ["Hiragino Mincho ProN", "Yu Mincho", "serif"],
 });
 
 export const metadata: Metadata = {
