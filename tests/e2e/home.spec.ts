@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { openStep } from "./helpers";
 
 test("new visitor starts with hiragana, without hydration errors", async ({ page }) => {
   const errors: string[] = [];
@@ -16,7 +17,7 @@ test("new visitor starts with hiragana, without hydration errors", async ({ page
 });
 
 test("after the first lesson the home page moves on and shows reviews", async ({ page }) => {
-  await page.goto("/kursy/pismo/hiragana/a-ko?krok=5");
+  await openStep(page, "/kursy/pismo/hiragana/a-ko", 5);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
   await expect(page).toHaveURL(/hiragana\/sa-to/);
   await page.goto("/");
@@ -26,7 +27,7 @@ test("after the first lesson the home page moves on and shows reviews", async ({
 });
 
 test("review session works from the home page", async ({ page }) => {
-  await page.goto("/kursy/pismo/hiragana/a-ko?krok=5");
+  await openStep(page, "/kursy/pismo/hiragana/a-ko", 5);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
   await page.goto("/powtorki");
   await page.getByRole("button", { name: "Pokaż odpowiedź" }).click();

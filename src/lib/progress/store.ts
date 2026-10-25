@@ -37,8 +37,17 @@ export function saveProgress(p: Progress, storage: Storage | null): void {
 }
 
 export function setLessonStep(p: Progress, lessonId: string, step: number, now: Date): Progress {
-  const status = p.lessons[lessonId]?.status === "done" ? "done" : "started";
-  return { ...p, lessons: { ...p.lessons, [lessonId]: { status, step, updatedAt: now.toISOString() } } };
+  const saved = p.lessons[lessonId];
+  const status = saved?.status === "done" ? "done" : "started";
+  const reached = Math.max(step, saved?.reached ?? saved?.step ?? 1);
+  return { ...p, lessons: { ...p.lessons, [lessonId]: { status, step, reached, updatedAt: now.toISOString() } } };
+}
+
+/** The furthest step the learner may open: every step once the lesson is done. */
+export function reachedStep(p: Progress, lesson: Lesson): number {
+  const saved = p.lessons[lesson.id];
+  if (saved?.status === "done") return lesson.steps.length;
+  return Math.min(saved?.reached ?? saved?.step ?? 1, lesson.steps.length);
 }
 
 export function completeLesson(p: Progress, lesson: Lesson, now: Date): Progress {
@@ -55,7 +64,7 @@ export function completeLesson(p: Progress, lesson: Lesson, now: Date): Progress
   return {
     ...p,
     cards,
-    lessons: { ...p.lessons, [lesson.id]: { status: "done", step: steps, updatedAt: now.toISOString() } },
+    lessons: { ...p.lessons, [lesson.id]: { status: "done", step: steps, reached: steps, updatedAt: now.toISOString() } },
   };
 }
 

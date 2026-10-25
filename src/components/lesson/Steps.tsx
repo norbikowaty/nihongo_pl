@@ -1,7 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { Ja } from "@/components/ja/Ja";
 import { Prose } from "@/components/ja/Prose";
 import { allKana } from "@/content/kana";
-import type { Step } from "@/content/schema";
+import type { Exercise, Step } from "@/content/schema";
 import { Choice } from "./exercises/Choice";
 import { KanaQuiz } from "./exercises/KanaQuiz";
 import { SentenceBuilder } from "./exercises/SentenceBuilder";
@@ -25,7 +28,31 @@ function PlayButton() {
 
 const romajiOf = (kana: string) => allKana.find((k) => k.kana === kana)?.romaji ?? "";
 
-export function StepView({ step }: { step: Step }) {
+/** All exercises of a step; reports once every one has been answered (sentences: built correctly). */
+function ExerciseStep({ items, onComplete }: { items: Exercise[]; onComplete?: () => void }) {
+  const [done, setDone] = useState<number[]>([]);
+  const mark = (i: number) => {
+    if (done.includes(i)) return;
+    const next = [...done, i];
+    setDone(next);
+    if (next.length === items.length) onComplete?.();
+  };
+  return (
+    <div className="flex flex-col gap-2">
+      {items.map((ex, i) =>
+        ex.type === "build" ? (
+          <SentenceBuilder key={i} exercise={ex} onDone={(ok) => ok && mark(i)} />
+        ) : ex.type === "choice" ? (
+          <Choice key={i} exercise={ex} onAnswer={() => mark(i)} />
+        ) : (
+          <KanaQuiz key={i} exercise={ex} onDone={() => mark(i)} />
+        ),
+      )}
+    </div>
+  );
+}
+
+export function StepView({ step, onComplete }: { step: Step; onComplete?: () => void }) {
   switch (step.kind) {
     case "intro":
       return (
@@ -81,19 +108,7 @@ export function StepView({ step }: { step: Step }) {
         </ul>
       );
     case "exercise":
-      return (
-        <div className="flex flex-col gap-2">
-          {step.items.map((ex, i) =>
-            ex.type === "build" ? (
-              <SentenceBuilder key={i} exercise={ex} />
-            ) : ex.type === "choice" ? (
-              <Choice key={i} exercise={ex} />
-            ) : (
-              <KanaQuiz key={i} exercise={ex} />
-            ),
-          )}
-        </div>
-      );
+      return <ExerciseStep items={step.items} onComplete={onComplete} />;
     case "summary":
       return (
         <div>

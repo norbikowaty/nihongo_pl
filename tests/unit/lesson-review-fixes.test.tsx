@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { LessonAside } from "@/components/lesson/LessonAside";
-import { TestRunner } from "@/components/lesson/LessonPlayer";
+import { LessonPlayer, TestRunner } from "@/components/lesson/LessonPlayer";
 import type { Lesson } from "@/content/schema";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }) }));
@@ -61,5 +61,31 @@ describe("lesson fixes from the final review", () => {
     await user.click(screen.getByRole("button", { name: "Spróbuj jeszcze raz" }));
     expect(screen.queryByText(/Wynik:/)).toBeNull();
     expect(screen.getAllByRole("button", { name: "a" })[0]).toBeEnabled();
+  });
+
+  it("a lesson cannot jump ahead of the steps reached so far", async () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    const user = userEvent.setup();
+    const withExercise: Lesson = {
+      ...lesson("c"),
+      steps: [
+        { kind: "examples", items: [{ ja: ja("あ"), pl: "a" }] },
+        { kind: "exercise", items: [{ type: "choice", prompt: "1", options: ["a", "b"], answer: 0, why: "." }] },
+        { kind: "examples", items: [{ ja: ja("あ"), pl: "a" }] },
+        { kind: "examples", items: [{ ja: ja("あ"), pl: "a" }] },
+        { kind: "summary", points: ["x"], words: [] },
+      ],
+    };
+    render(<LessonPlayer lesson={withExercise} krok="5" />);
+    // The address asks for the summary, but nothing has been opened yet.
+    expect(screen.getByText("Krok 1 z 5")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Krok 5/ })).toHaveAttribute("aria-disabled", "true");
+    await user.click(screen.getByRole("tab", { name: /Krok 5/ }));
+    expect(screen.getByText("Krok 1 z 5")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Dalej" }));
+    expect(screen.getByRole("button", { name: "Dalej" })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "b" }));
+    expect(screen.getByRole("button", { name: "Dalej" })).toBeEnabled();
   });
 });

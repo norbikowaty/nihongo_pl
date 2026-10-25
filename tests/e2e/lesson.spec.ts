@@ -1,10 +1,14 @@
 import { expect, test } from "@playwright/test";
+import { openStep } from "./helpers";
 
 const LESSON = "/kursy/gramatyka/pierwsze-zdania/wa-desu";
 const selectedStep = (page: import("@playwright/test").Page) =>
   page.getByRole("tablist", { name: "Kroki lekcji" }).getByRole("tab", { selected: true });
 
-test("step number in the address is clamped", async ({ page }) => {
+test("step number in the address is clamped to the steps reached", async ({ page }) => {
+  await page.goto(`${LESSON}?krok=5`);
+  await expect(page.getByText("Krok 1 z 5")).toBeVisible();
+  await openStep(page, LESSON, 5);
   await page.goto(`${LESSON}?krok=9`);
   await expect(page.getByText("Krok 5 z 5")).toBeVisible();
   await page.goto(`${LESSON}?krok=abc`);
@@ -34,7 +38,7 @@ test("unknown and upcoming lessons show the not-found page", async ({ page }) =>
 });
 
 test("sentence builder accepts the right order", async ({ page }) => {
-  await page.goto(`${LESSON}?krok=4`);
+  await openStep(page, LESSON, 4);
   for (const t of ["私", "は", "学生", "です"]) {
     // The step also has a choice question with a は option; the sentence tiles come first.
     await page.getByRole("button", { name: t, exact: true }).first().click();
@@ -55,7 +59,7 @@ test("furigana follows the reading switch", async ({ page }) => {
 });
 
 test("finishing the lesson marks it done in the course list", async ({ page }) => {
-  await page.goto(`${LESSON}?krok=5`);
+  await openStep(page, LESSON, 5);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
   // The next lesson in study order is the first writing lesson.
   await expect(page).toHaveURL(/\/kursy\/pismo\/hiragana\/a-ko$/);

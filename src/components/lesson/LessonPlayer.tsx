@@ -6,7 +6,7 @@ import { addTransitionType, startTransition, useEffect, useRef, useState, ViewTr
 import { courses } from "@/content/catalog";
 import type { Exercise, Lesson } from "@/content/schema";
 import { clampStep, nextLessonId, stepLabel, testPassed } from "@/lib/lessons";
-import { completeLesson, setLessonStep } from "@/lib/progress/store";
+import { completeLesson, reachedStep, setLessonStep } from "@/lib/progress/store";
 import { useProgress } from "@/lib/progress/useProgress";
 import { Choice } from "./exercises/Choice";
 import { btnDark, btnPrimary, btnSecondary } from "./exercises/buttons";
@@ -98,15 +98,20 @@ export function LessonPlayerFromAddress({ lesson }: { lesson: Lesson }) {
 
 export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: Lesson; krok?: string | null; paramStr?: string }) {
   const router = useRouter();
-  const { update } = useProgress();
+  const { progress, update } = useProgress();
   const finish = useFinish(lesson);
   const top = useRef<HTMLHeadingElement>(null);
   const total = lesson.steps.length;
+  // Steps open one by one: the address cannot jump past the furthest step reached so far.
+  const reached = reachedStep(progress, lesson);
   // A click updates the step at once; the address catches up a moment later. A request made
   // under an older address (e.g. before the browser's back button) is ignored.
   const [requested, setRequested] = useState<{ from: string; step: number } | null>(null);
-  const step = requested?.from === paramStr ? requested.step : clampStep(krok, total);
+  const step = requested?.from === paramStr ? requested.step : clampStep(krok, reached);
   const current = lesson.steps[step - 1];
+  // Exercise steps unlock the next one only when every exercise is answered.
+  const [completedStep, setCompletedStep] = useState<number | null>(null);
+  const canGoOn = current.kind !== "exercise" || step < reached || completedStep === step;
 
   const goTo = (n: number) => {
     startTransition(() => {
@@ -147,8 +152,9 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
               role="tab"
               aria-label={`Krok ${i + 1}: ${stepLabel(s.kind)}`}
               aria-selected={i + 1 === step}
-              onClick={() => goTo(i + 1)}
-              className={`flex min-w-0 flex-1 cursor-pointer flex-col gap-2 py-2.5 text-left text-base ${
+              aria-disabled={i + 1 > reached}
+              onClick={() => i + 1 <= reached && goTo(i + 1)}
+              className={`flex min-w-0 flex-1 cursor-pointer flex-col gap-2 py-2.5 text-left text-base aria-disabled:cursor-not-allowed aria-disabled:text-mu ${
                 i + 1 === step ? "font-bold" : ""
               }`}
             >
@@ -167,7 +173,7 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
             default="none"
           >
             <div>
-              <StepView step={current} />
+              <StepView step={current} onComplete={() => setCompletedStep(step)} />
             </div>
           </ViewTransition>
         </div>
@@ -179,10 +185,15 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
           >
             Wstecz
           </button>
-          <span className="text-base">
-            Krok {step} z {total}
+          <span className="text-center text-base">
+            {canGoOn ? `Krok ${step} z ${total}` : "Odpowiedz na wszystkie pytania, żeby iść dalej"}
           </span>
-          <button type="button" onClick={() => (step === total ? finish() : goTo(step + 1))} className={btnPrimary}>
+          <button
+            type="button"
+            disabled={!canGoOn}
+            onClick={() => (step === total ? finish() : goTo(step + 1))}
+            className={`${btnPrimary} disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0`}
+          >
             {nextLabel}
           </button>
         </div>

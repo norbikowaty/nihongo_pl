@@ -6,6 +6,7 @@ import {
   loadProgress,
   parseProgress,
   saveProgress,
+  reachedStep,
   setLessonStep,
   setNote,
   setReading,
@@ -134,5 +135,14 @@ describe("progress store", () => {
   it("setLessonStep does not downgrade a finished lesson", () => {
     const done = completeLesson(emptyProgress(), lesson, now);
     expect(setLessonStep(done, lesson.id, 2, now).lessons[lesson.id].status).toBe("done");
+  });
+
+  it("reachedStep remembers the furthest step, not the current one", () => {
+    const at3 = setLessonStep(emptyProgress(), lesson.id, 3, now);
+    const back = setLessonStep(at3, lesson.id, 1, now);
+    expect(back.lessons[lesson.id].step).toBe(1);
+    expect(reachedStep(back, lesson)).toBe(3);
+    expect(reachedStep(emptyProgress(), lesson)).toBe(1);
+    expect(reachedStep(completeLesson(emptyProgress(), lesson, now), lesson)).toBe(lesson.steps.length);
   });
 });
