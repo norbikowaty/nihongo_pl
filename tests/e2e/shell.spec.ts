@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("night mode toggles and survives a reload", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" });
+  // Day mode by default, even when the system is set to dark.
+  await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
   await expect(page.locator("html")).not.toHaveClass(/dark/);
   await page.getByRole("button", { name: "Włącz tryb nocny" }).click();

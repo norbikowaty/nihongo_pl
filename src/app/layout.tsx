@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   description: "Kurs japońskiego po polsku, od pierwszego znaku do egzaminu JLPT N5.",
 };
 
-// Runs before first paint so the saved theme and reading-aid level never flash.
-const bootScript = `(function(){var h=document.documentElement;try{var t=localStorage.getItem("nihongo-pl:theme");var d=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;if(d)h.classList.add("dark")}catch(e){}var c=/^\\/kursy\\/pismo(\\/|$)/.test(location.pathname)?"pismo":"reszta";var l=c==="pismo"?2:1;try{var p=JSON.parse(localStorage.getItem("nihongo-pl:progress")||"null");var v=p&&p.settings&&p.settings.reading&&p.settings.reading[c];if(v===0||v===1||v===2)l=v}catch(e){}h.setAttribute("data-reading",String(l))})()`;
+// Runs before first paint so the saved theme and reading-aid level never flash. Day mode unless the learner chose night.
+const bootScript = `(function(){var h=document.documentElement;try{var t=localStorage.getItem("nihongo-pl:theme");if(t==="dark")h.classList.add("dark")}catch(e){}var c=/^\\/kursy\\/pismo(\\/|$)/.test(location.pathname)?"pismo":"reszta";var l=c==="pismo"?2:1;try{var p=JSON.parse(localStorage.getItem("nihongo-pl:progress")||"null");var v=p&&p.settings&&p.settings.reading&&p.settings.reading[c];if(v===0||v===1||v===2)l=v}catch(e){}h.setAttribute("data-reading",String(l))})()`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

@@ -6,7 +6,7 @@ const pages = ["/", "/kursy", "/kursy/gramatyka/pierwsze-zdania/wa-desu", "/powt
 for (const scheme of ["light", "dark"] as const) {
   for (const path of pages) {
     test(`${path} has no serious accessibility issues (${scheme})`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme: scheme });
+      if (scheme === "dark") await page.addInitScript(() => localStorage.setItem("nihongo-pl:theme", "dark"));
       await page.goto(path);
       await page.waitForLoadState("networkidle");
       const { violations } = await new AxeBuilder({ page }).analyze();
