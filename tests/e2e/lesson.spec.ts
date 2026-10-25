@@ -57,7 +57,9 @@ test("furigana follows the reading switch", async ({ page }) => {
 test("finishing the lesson marks it done in the course list", async ({ page }) => {
   await page.goto(`${LESSON}?krok=5`);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
-  await expect(page).toHaveURL(/\/kursy$/);
+  // The next lesson in study order is the first writing lesson.
+  await expect(page).toHaveURL(/\/kursy\/pismo\/hiragana\/a-ko$/);
+  await page.goto("/kursy");
   await page.locator("summary", { hasText: "Gramatyka N5" }).click();
   await expect(page.getByRole("link", { name: "Partykuła は i です, ukończona" })).toBeVisible();
 });

@@ -107,6 +107,22 @@ describe("lesson schema", () => {
     }
   });
 
+  it("writing lessons only use kana taught so far", () => {
+    const small = new Set([..."ゃゅょっャュョッ"]);
+    for (const script of ["hiragana", "katakana"]) {
+      const known = new Set<string>(script === "katakana" ? ["ー"] : []);
+      for (const l of lessons.filter((x) => x.section === script)) {
+        for (const s of l.steps) if (s.kind === "newKana") s.chars.forEach((c) => known.add(c));
+        const words = l.steps.flatMap((s) => (s.kind === "summary" ? s.words : []));
+        for (const word of words) {
+          const chars = [...word.ja.segs.map((g) => g.t).join("")];
+          const unknown = chars.filter((c) => !known.has(c) && !(l.slug.endsWith("dakuten") && small.has(c)));
+          expect(unknown, `${l.id}: ${chars.join("")}`).toEqual([]);
+        }
+      }
+    }
+  });
+
   it("every lesson parses", () => {
     for (const l of lessons) expect(() => LessonSchema.parse(l)).not.toThrow();
   });

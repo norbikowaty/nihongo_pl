@@ -11,12 +11,14 @@ export function Choice({ exercise, onAnswer }: { exercise: ChoiceExercise; onAns
   const [picked, setPicked] = useState<number | null>(null);
   const answered = picked !== null;
   const ok = picked === exercise.answer;
+  // Whole sentences read better one per row than squeezed into a grid.
+  const long = exercise.options.some((o) => o.length > 8);
 
   return (
     <div className="border-b border-ln py-6">
       <Prose text={exercise.prompt} className="text-[20px]" />
       {exercise.ja && <Ja text={exercise.ja} size="lg" className="mt-2" />}
-      <div className="mt-4 grid grid-cols-2 gap-2.5 min-[760px]:grid-cols-4">
+      <div className={`mt-4 grid gap-2.5 ${long ? "grid-cols-1" : "grid-cols-2 min-[760px]:grid-cols-4"}`}>
         {exercise.options.map((o, i) => {
           const tone = !answered
             ? "bg-bg text-ink"
@@ -34,7 +36,7 @@ export function Choice({ exercise, onAnswer }: { exercise: ChoiceExercise; onAns
                 setPicked(i);
                 onAnswer?.(i === exercise.answer);
               }}
-              className={`jp min-h-14 cursor-pointer px-4 text-[22px] font-semibold disabled:cursor-default ${tone}`}
+              className={`jp min-h-14 cursor-pointer px-5 font-semibold disabled:cursor-default ${long ? "text-left text-[20px]" : "text-[22px]"} ${tone}`}
             >
               <span lang="ja">{o}</span>
             </button>

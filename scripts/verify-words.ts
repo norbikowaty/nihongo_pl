@@ -8,7 +8,15 @@ import { lessons } from "../src/content/lessons";
 import { w } from "../src/content/lessons/words";
 import type { Word } from "../src/content/schema";
 
-type Entry = { id: string; kanji: { text: string }[]; kana: { text: string }[]; sense: { gloss: { text: string }[] }[] };
+type Entry = {
+  id: string;
+  kanji: { text: string; common: boolean }[];
+  kana: { text: string; common: boolean }[];
+  sense: { gloss: { text: string }[] }[];
+};
+
+// Kana-only words match many homophones; the entry whose matching reading is marked common comes first.
+const commonScore = (e: Entry, read: string) => (e.kana.some((k) => k.text === read && k.common) ? 1 : 0);
 
 const cache = join(process.cwd(), ".cache", "jmdict");
 
@@ -42,11 +50,20 @@ async function main() {
   for (const word of words.values()) {
     const text = written(word);
     const read = reading(word);
-    const hits = dict.filter(
-      (e) =>
-        e.kana.some((k) => k.text === read) &&
-        (text === read ? true : e.kanji.some((k) => k.text === text)),
-    );
+    const hits = dict
+      .filter(
+        (e) =>
+          e.kana.some((k) => k.text === read) &&
+          (text === read ? true : e.kanji.some((k) => k.text === text)),
+      )
+      .sort((a, b) => commonScore(b, read) - commonScore(a, read))
+      // A word pinned to a JMdict entry (homophones) must match exactly that entry.
+      .filter((e, _, all) => !word.jmdict || (all.some((x) => x.id === word.jmdict) ? e.id === word.jmdict : true));
+    if (word.jmdict && !hits.some((h) => h.id === word.jmdict)) {
+      missing++;
+      console.log(`WRONG ID ${word.id}: ${text} 【${read}】 is not JMdict entry ${word.jmdict}`);
+      continue;
+    }
     if (hits.length === 0) {
       missing++;
       console.log(`MISSING  ${word.id}: ${text} 【${read}】 — ${word.pl}`);
