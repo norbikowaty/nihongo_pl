@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f7f7f6;
+  --sf: #ffffff;
+  --ink: #171717;
+  --mu: #585858;
+  --ln: #e4e4e2;
+  --ac: #b23a24;
+  --as: #f7e7e3;
+  --aci: #ffffff;
+  --ok: #2c6e49;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #141414;
+  --sf: #1e1e1e;
+  --ink: #ededed;
+  --mu: #a6a6a6;
+  --ln: #2e2e2e;
+  --ac: #ff7b5e;
+  --as: #3a221d;
+  --aci: #1a0e0b;
+  --ok: #7fd3a1;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-sf: var(--sf);
+  --color-ink: var(--ink);
+  --color-mu: var(--mu);
+  --color-ln: var(--ln);
+  --color-ac: var(--ac);
+  --color-as: var(--as);
+  --color-aci: var(--aci);
+  --color-ok: var(--ok);
+  --font-serif: var(--font-serif-src), Georgia, serif;
+  --font-jp: var(--font-jp-src), "Noto Serif JP", serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.jp {
+  font-family: var(--font-jp);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ac);
+  outline-offset: 3px;
+}
