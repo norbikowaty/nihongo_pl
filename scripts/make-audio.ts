@@ -84,12 +84,15 @@ const vowelOf = (c: string) => "アイウエオ"[rows.findIndex((r) => r.include
 
 /** Readings compared loosely: particles は, へ, を sound wa, e, o; ー is the vowel before it; punctuation and accents are ignored. */
 const loose = (kana: string) =>
-  asVoiced(kana)
-    .replace(/(.)ー/g, (_, c: string) => c + vowelOf(c))
-    .replace(/[^ァ-ヶ]/g, "")
-    .replace(/ハ/g, "ワ")
-    .replace(/ヘ/g, "エ")
-    .replace(/ヲ/g, "オ");
+  asVoiced(
+    kana
+      .replace(/[ぁ-ゖ]/g, (c) => String.fromCharCode(c.charCodeAt(0) + 0x60))
+      .replace(/[^ァ-ヶー]/g, "")
+      .replace(/(.)ー/g, (_, c: string) => c + vowelOf(c))
+      .replace(/ハ/g, "ワ")
+      .replace(/ヘ/g, "エ")
+      .replace(/ヲ/g, "オ"),
+  );
 
 /** A warning when the voice reads a sentence differently from its furigana (e.g. 人 as にん instead of ひと). */
 async function checkReading(t: Spoken, say: string, speaker: number): Promise<string | undefined> {
