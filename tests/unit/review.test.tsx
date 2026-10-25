@@ -20,12 +20,12 @@ describe("exam facts", () => {
 
 describe("next lesson", () => {
   it("starts with writing course", () => {
-    expect(nextLesson(emptyProgress())?.id).toBe("pismo/hiragana/a-ko");
+    expect(nextLesson(emptyProgress())?.id).toBe("pismo/hiragana/a-o");
   });
 
   it("skips done lessons", () => {
-    const first = lessons.find((l) => l.id === "pismo/hiragana/a-ko")!;
-    expect(nextLesson(completeLesson(emptyProgress(), first, now))?.id).toBe("pismo/hiragana/sa-to");
+    const first = lessons.find((l) => l.id === "pismo/hiragana/a-o")!;
+    expect(nextLesson(completeLesson(emptyProgress(), first, now))?.id).toBe("pismo/hiragana/ka-ko");
   });
 });
 
@@ -41,7 +41,7 @@ describe("ReviewSession", () => {
   it("shows empty state without cards", () => {
     render(<ReviewSession />);
     expect(screen.getByText("Nie masz dziś nic do powtórki.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /あ–お i か–こ/ })).toHaveAttribute("href", "/kursy/pismo/hiragana/a-ko");
+    expect(screen.getByRole("link", { name: /あ・い・う・え・お/ })).toHaveAttribute("href", "/kursy/pismo/hiragana/a-o");
   });
 
   it("rating a card removes it from today's queue", async () => {

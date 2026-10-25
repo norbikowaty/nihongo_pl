@@ -62,7 +62,7 @@ test("finishing the lesson marks it done in the course list", async ({ page }) =
   await openStep(page, LESSON, 5);
   await page.getByRole("button", { name: "Zakończ lekcję" }).click();
   // The next lesson in study order is the first writing lesson.
-  await expect(page).toHaveURL(/\/kursy\/pismo\/hiragana\/a-ko$/);
+  await expect(page).toHaveURL(/\/kursy\/pismo\/hiragana\/a-o$/);
   await page.goto("/kursy");
   await page.locator("summary", { hasText: "Gramatyka N5" }).click();
   await expect(page.getByRole("link", { name: /Partykuła は i です.*ukończona/ })).toBeVisible();

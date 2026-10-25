@@ -28,7 +28,7 @@ describe("header visibility", () => {
 
 describe("reading context", () => {
   it("writing course uses its own setting", () => {
-    expect(readingContextFor("/kursy/pismo/hiragana/a-ko")).toBe("pismo");
+    expect(readingContextFor("/kursy/pismo/hiragana/a-o")).toBe("pismo");
   });
 
   it("everything else shares one setting", () => {

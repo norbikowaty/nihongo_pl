@@ -116,9 +116,40 @@ describe("lesson schema", () => {
         const words = l.steps.flatMap((s) => (s.kind === "summary" ? s.words : []));
         for (const word of words) {
           const chars = [...word.ja.segs.map((g) => g.t).join("")];
-          const unknown = chars.filter((c) => !known.has(c) && !(l.slug.endsWith("dakuten") && small.has(c)));
+          // Small ゃ ゅ ょ っ come with the last lesson of each script.
+          const unknown = chars.filter((c) => !known.has(c) && !(l.slug.endsWith("handakuten") && small.has(c)));
           expect(unknown, `${l.id}: ${chars.join("")}`).toEqual([]);
         }
+      }
+    }
+  });
+
+  it("writing lessons teach every base character once, a row or two at a time", () => {
+    for (const [script, table] of [
+      ["hiragana", hiragana],
+      ["katakana", katakana],
+    ] as const) {
+      const taught = lessons
+        .filter((l) => l.section === script)
+        .flatMap((l) => l.steps.flatMap((s) => (s.kind === "newKana" ? s.chars : [])));
+      const base = table.flatMap((r) => r.cells).filter(Boolean).map((c) => c!.kana);
+      for (const k of base) expect(taught.filter((t) => t === k), k).toHaveLength(1);
+      for (const l of lessons.filter((x) => x.section === script && !x.slug.includes("dakuten"))) {
+        const chars = l.steps.flatMap((s) => (s.kind === "newKana" ? s.chars : []));
+        expect(chars.length, l.id).toBeLessThanOrEqual(10);
+      }
+    }
+  });
+
+  it("kana drills repeat characters from earlier lessons only", () => {
+    for (const script of ["hiragana", "katakana"]) {
+      const seen = new Set<string>();
+      for (const l of lessons.filter((x) => x.section === script)) {
+        for (const s of l.steps) {
+          if (s.kind !== "exercise") continue;
+          for (const ex of s.items) if (ex.type === "kana") for (const r of ex.review ?? []) expect(seen.has(r.kana), `${l.id} ${r.kana}`).toBe(true);
+        }
+        for (const s of l.steps) if (s.kind === "newKana") s.chars.forEach((c) => seen.add(c));
       }
     }
   });
