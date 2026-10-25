@@ -15,6 +15,7 @@ const compounds: Record<string, string> = {
   ポーランド人: "ポーランド + 〜人",
   日本語: "日本 + 〜語",
   かいしゃいん: "会社 + 〜員, Minna no Nihongo lekcja 1",
+  何時: "何 + 〜時 (godzina)",
 };
 
 const cache = join(process.cwd(), ".cache", "jlpt");

@@ -55,6 +55,12 @@ export const lessonKanji: Kanji[] = [
   k("名", ["メイ", "ミョウ"], ["な"], "imię, nazwa", 6),
   k("前", ["ゼン"], ["まえ"], "przód, przed", 9),
   k("国", ["コク"], ["くに"], "kraj", 8),
+  k("今", ["コン", "キン"], ["いま"], "teraz", 4),
+  k("時", ["ジ"], ["とき"], "czas, godzina", 10),
+  k("半", ["ハン"], ["なか.ば"], "połowa", 5),
+  k("分", ["ブン", "フン", "ブ"], ["わ.ける"], "minuta; dzielić", 4),
+  k("月", ["ゲツ", "ガツ"], ["つき"], "miesiąc; księżyc", 4),
+  k("円", ["エン"], ["まる.い"], "jen; koło", 4),
 ];
 
 const byChar = new Map([...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji].map((x) => [x.kanji, x]));
