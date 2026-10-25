@@ -27,7 +27,7 @@ export function KanaQuiz({ exercise, onDone }: { exercise: KanaExercise; onDone?
 
   if (finished) {
     return (
-      <div className="flex flex-col items-start gap-4 py-6">
+      <div className="rise flex min-h-[380px] flex-col items-center justify-center gap-4 py-6 text-center">
         <p role="status" className="text-[26px] font-bold">
           Wynik: {score} z {total}
         </p>

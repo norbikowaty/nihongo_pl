@@ -61,12 +61,12 @@ export function TestRunner({ lesson }: { lesson: Lesson }) {
       {choices.map((ex, i) => (
         <Choice key={`${attempt}-${i}`} exercise={ex} onAnswer={(ok) => setAnswers((a) => ({ ...a, [i]: ok }))} />
       ))}
-      <div className="mt-8 min-h-12">
+      <div className="mt-8 flex min-h-12 flex-col items-center text-center">
         <p role="status" className="text-[24px] font-bold">
           {finished && `Wynik: ${correct} z ${choices.length}. ${passed ? "Test zaliczony." : "Do zaliczenia potrzeba 80%."}`}
         </p>
         {finished && (
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="rise mt-4 flex flex-wrap items-center justify-center gap-3">
             {!passed && (
               <button
                 type="button"
