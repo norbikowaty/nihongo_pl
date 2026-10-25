@@ -102,6 +102,23 @@ export const w = {
   chotto: kana("chotto", "ちょっと", "chotto", "trochę, chwilę"),
   ee: kana("ee", "ええ", "ē", "tak (mniej oficjalnie)"),
 
+  // Gramatyka: partykuły
+  taberu: jw("taberu", "{食|た}べます", "tabemasu", "jeść", ["食べる", "たべる"]),
+  nomu: jw("nomu", "のみます", "nomimasu", "pić", ["飲む", "のむ"]),
+  miru: jw("miru", "{見|み}ます", "mimasu", "oglądać, patrzeć", ["見る", "みる"]),
+  kau: jw("kau", "かいます", "kaimasu", "kupować", ["買う", "かう"]),
+  suru: jw("suru", "します", "shimasu", "robić", ["する", "する"]),
+  mizu: jw("mizu", "{水|みず}", "mizu", "woda"),
+  nani: jw("nani", "{何|なに}", "nani", "co (przed を i も)"),
+  gakko: jw("gakko", "{学校|がっこう}", "gakkō", "szkoła"),
+  uchi: { ...kana("uchi", "うち", "uchi", "dom (mój)"), jmdict: "1191740" },
+  nihon: jw("nihon", "{日本|にほん}", "Nihon", "Japonia"),
+  depato: kana("depato", "デパート", "depāto", "dom towarowy"),
+  toshokan: kana("toshokan", "としょかん", "toshokan", "biblioteka"),
+  yomimasu: jw("yomimasu", "{読|よ}みます", "yomimasu", "czytać", ["読む", "よむ"]),
+  kakimasu: jw("kakimasu", "{書|か}きます", "kakimasu", "pisać", ["書く", "かく"]),
+  hanasu: jw("hanasu", "{話|はな}します", "hanashimasu", "mówić, rozmawiać", ["話す", "はなす"]),
+
   // Pismo: hiragana
   au: { ...kana("au", "あう", "au", "spotkać (się)"), jmdict: "1198180" },
   ooi: { ...kana("ooi", "おおい", "ōi", "dużo, wiele"), jmdict: "1407460" },

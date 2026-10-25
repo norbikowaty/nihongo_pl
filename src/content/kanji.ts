@@ -64,6 +64,14 @@ export const lessonKanji: Kanji[] = [
   k("行", ["コウ", "ギョウ"], ["い.く", "ゆ.く", "おこな.う"], "iść; robić", 6),
   k("来", ["ライ"], ["く.る", "きた.る"], "przychodzić", 7),
   k("休", ["キュウ"], ["やす.む"], "odpoczywać", 6),
+  k("食", ["ショク", "ジキ"], ["く.う", "た.べる"], "jeść, jedzenie", 9),
+  k("見", ["ケン"], ["み.る"], "patrzeć, widzieć", 7),
+  k("水", ["スイ"], ["みず"], "woda", 4),
+  k("校", ["コウ"], [], "szkoła", 10),
+  k("電", ["デン"], [], "elektryczność", 13),
+  k("読", ["ドク", "トク"], ["よ.む"], "czytać", 14),
+  k("書", ["ショ"], ["か.く"], "pisać", 10),
+  k("話", ["ワ"], ["はな.す", "はなし"], "mówić, rozmowa", 13),
 ];
 
 const byChar = new Map([...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji].map((x) => [x.kanji, x]));
