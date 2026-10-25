@@ -1,9 +1,9 @@
-// Checks readings and stroke counts in src/content/kanji.ts against KANJIDIC2 (EDRDG, CC BY-SA 4.0).
+// Checks readings and stroke counts of every kanji in src/content/kanji.ts against KANJIDIC2 (EDRDG, CC BY-SA 4.0).
 // Usage: npx tsx scripts/verify-kanji.ts   (expects the kanjidic2-en JSON from jmdict-simplified in .cache/kanjidic/)
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { kanjiSets } from "../src/content/kanji";
+import { kanjiSets, lessonKanji } from "../src/content/kanji";
 
 type Char = {
   literal: string;
@@ -30,7 +30,7 @@ async function load(): Promise<Char[]> {
 async function main() {
   const dict = new Map((await load()).map((c) => [c.literal, c]));
   let problems = 0;
-  for (const set of kanjiSets) {
+  for (const set of [...kanjiSets, { kanji: lessonKanji }]) {
     for (const k of set.kanji) {
       const c = dict.get(k.kanji);
       if (!c) {

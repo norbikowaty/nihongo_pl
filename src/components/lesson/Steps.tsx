@@ -4,7 +4,9 @@ import { useState } from "react";
 import { Ja } from "@/components/ja/Ja";
 import { Prose } from "@/components/ja/Prose";
 import { allKana, hiraganaTwin } from "@/content/kana";
+import { kunLabel } from "@/content/kanji";
 import type { Exercise, Step } from "@/content/schema";
+import type { NewKanji } from "@/lib/kanji";
 import { Choice } from "./exercises/Choice";
 import { KanaTrainer } from "./exercises/KanaTrainer";
 import { SentenceBuilder } from "./exercises/SentenceBuilder";
@@ -52,7 +54,47 @@ function ExerciseStep({ items, onComplete }: { items: Exercise[]; onComplete?: (
   );
 }
 
-export function StepView({ step, onComplete }: { step: Step; onComplete?: () => void }) {
+/** Kanji the lesson uses for the first time, shown before the lesson goes on. */
+function KanjiIntro({ kanji }: { kanji: NewKanji[] }) {
+  return (
+    <section aria-labelledby="nowe-kanji" className="mt-10 border-t-2 border-ink pt-6">
+      <h2 id="nowe-kanji" className="text-[24px] font-bold">
+        Nowe kanji w tej lekcji
+      </h2>
+      <p className="mt-1 max-w-[60ch]">
+        Te znaki zobaczysz w zdaniach. Nie musisz ich jeszcze umieć napisać: furigana nad nimi podpowie czytanie, a po
+        lekcji trafią do powtórek.
+      </p>
+      <ul className="mt-5 grid grid-cols-2 gap-3 min-[760px]:grid-cols-3">
+        {kanji.map((k) => (
+          <li key={k.kanji} className="flex gap-4 bg-bg p-4">
+            <span lang="ja" className="jp text-[52px] leading-none font-semibold">
+              {k.kanji}
+            </span>
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span className="font-semibold">{k.meaning}</span>
+              {k.example && (
+                <span className="text-[16px]">
+                  <span lang="ja" className="jp">
+                    {k.example.word}
+                  </span>{" "}
+                  <span lang="ja" className="jp text-mu">
+                    {k.example.reading}
+                  </span>
+                </span>
+              )}
+              <span lang="ja" className="jp text-[14px] text-mu">
+                {[...k.on, ...k.kun.map(kunLabel)].join("、")}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export function StepView({ step, kanji = [], onComplete }: { step: Step; kanji?: NewKanji[]; onComplete?: () => void }) {
   switch (step.kind) {
     case "intro":
       return (
@@ -65,6 +107,7 @@ export function StepView({ step, onComplete }: { step: Step; onComplete?: () => 
           <div className="mt-7">
             <Prose text={step.after} />
           </div>
+          {kanji.length > 0 && <KanjiIntro kanji={kanji} />}
         </div>
       );
     case "newKana":

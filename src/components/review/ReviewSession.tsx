@@ -153,7 +153,6 @@ export function ReviewSession() {
 
   const face = cardFace(id)!;
   const card = cards[id].card;
-  const isKana = id.startsWith("kana:");
   const now = new Date();
 
   return (
@@ -162,7 +161,7 @@ export function ReviewSession() {
         <div className="flex flex-wrap items-center justify-between gap-3 text-base">
           <span className="text-mu">Zostało: {queue.length}</span>
           <span className="bg-as px-2.5 py-0.5">
-            {isKana ? face.meaning : "słowo"} · próg: {stageLabel(stageOf(card))}
+            {face.tag} · próg: {stageLabel(stageOf(card))}
           </span>
         </div>
 
@@ -174,12 +173,14 @@ export function ReviewSession() {
           {revealed ? (
             <dl className="rise grid border-t-2 border-ink min-[760px]:grid-cols-2">
               <div className="flex flex-col gap-1 border-b border-ln py-4 min-[760px]:border-r min-[760px]:border-b-0 min-[760px]:pr-6">
-                <dt className="text-[15px] text-mu">Czytanie</dt>
-                <dd className="text-[26px] font-semibold">{face.reading}</dd>
+                <dt className="text-[15px] text-mu">{face.readingLabel}</dt>
+                <dd lang={face.tag === "kanji" ? "ja" : undefined} className="jp text-[26px] font-semibold">
+                  {face.reading}
+                </dd>
               </div>
               <div className="flex flex-col gap-1 py-4 min-[760px]:pl-6">
-                <dt className="text-[15px] text-mu">{isKana ? "Alfabet" : "Znaczenie"}</dt>
-                <dd className="text-[26px] font-semibold">{isKana ? face.meaning.replace("znak ", "") : face.meaning}</dd>
+                <dt className="text-[15px] text-mu">{face.meaningLabel}</dt>
+                <dd className="text-[26px] font-semibold">{face.meaning}</dd>
               </div>
             </dl>
           ) : (

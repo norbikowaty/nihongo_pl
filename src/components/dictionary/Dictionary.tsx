@@ -4,7 +4,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Ja } from "@/components/ja/Ja";
-import { kanjiSets, kunLabel } from "@/content/kanji";
+import { titleText } from "@/components/lesson/LessonTitle";
+import { type Kanji, kanjiSets, kunLabel, lessonKanji } from "@/content/kanji";
+import { lessons } from "@/content/lessons";
+import { lessonIntroducing } from "@/lib/kanji";
 import { allWords, searchWords } from "@/lib/dictionary";
 
 const words = allWords();
@@ -41,27 +44,52 @@ function WordList() {
   );
 }
 
+function KanjiCard({ k }: { k: Kanji }) {
+  const lessonId = lessonIntroducing(k.kanji);
+  const lesson = lessons.find((l) => l.id === lessonId);
+  return (
+    <li className="flex flex-col gap-1 bg-sf p-5">
+      <span lang="ja" className="jp text-[56px] leading-none font-semibold">
+        {k.kanji}
+      </span>
+      <span className="font-semibold">{k.meaning}</span>
+      <span lang="ja" className="jp text-[15px]">
+        {k.on.join("、")}
+      </span>
+      <span lang="ja" className="jp text-[15px]">
+        {k.kun.map(kunLabel).join("、")}
+      </span>
+      <span className="text-[14px] text-mu">{k.strokes} kresek</span>
+      {lesson && (
+        <Link href={`/kursy/${lesson.id}`} className="mt-1 text-[15px] underline underline-offset-4">
+          Lekcja: {titleText(lesson.title)}
+        </Link>
+      )}
+    </li>
+  );
+}
+
 function KanjiList() {
+  const fromLessons = lessonKanji.filter((k) => lessonIntroducing(k.kanji));
   return (
     <>
+      {fromLessons.length > 0 && (
+        <section className="mb-10">
+          <h2 className="mb-1 text-2xl font-bold">Z lekcji gramatyki</h2>
+          <p className="mb-4 text-mu">W kolejności, w jakiej pojawiają się w kursie.</p>
+          <ul className="grid grid-cols-2 gap-3 min-[760px]:grid-cols-5">
+            {fromLessons.map((k) => (
+              <KanjiCard key={k.kanji} k={k} />
+            ))}
+          </ul>
+        </section>
+      )}
       {kanjiSets.map((set) => (
         <section key={set.id} className="mb-10">
           <h2 className="mb-4 text-2xl font-bold">{set.title}</h2>
           <ul className="grid grid-cols-2 gap-3 min-[760px]:grid-cols-5">
             {set.kanji.map((k) => (
-              <li key={k.kanji} className="flex flex-col gap-1 bg-sf p-5">
-                <span lang="ja" className="jp text-[56px] leading-none font-semibold">
-                  {k.kanji}
-                </span>
-                <span className="font-semibold">{k.meaning}</span>
-                <span lang="ja" className="jp text-[15px]">
-                  {k.on.join("、")}
-                </span>
-                <span lang="ja" className="jp text-[15px]">
-                  {k.kun.map(kunLabel).join("、")}
-                </span>
-                <span className="text-[14px] text-mu">{k.strokes} kresek</span>
-              </li>
+              <KanjiCard key={k.kanji} k={k} />
             ))}
           </ul>
         </section>

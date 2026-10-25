@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { addTransitionType, startTransition, useEffect, useRef, useState, ViewTransition } from "react";
 import { courses } from "@/content/catalog";
 import type { Exercise, Lesson } from "@/content/schema";
+import { newKanji } from "@/lib/kanji";
 import { clampStep, nextLessonId, stepLabel, testPassed } from "@/lib/lessons";
 import { completeLesson, reachedStep, setLessonStep } from "@/lib/progress/store";
 import { useProgress } from "@/lib/progress/useProgress";
@@ -173,7 +174,11 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
             default="none"
           >
             <div>
-              <StepView step={current} onComplete={() => setCompletedStep(step)} />
+              <StepView
+                step={current}
+                kanji={current.kind === "intro" ? newKanji(lesson) : undefined}
+                onComplete={() => setCompletedStep(step)}
+              />
             </div>
           </ViewTransition>
         </div>

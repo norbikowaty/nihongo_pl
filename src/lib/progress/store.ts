@@ -1,4 +1,5 @@
 import type { Lesson } from "@/content/schema";
+import { newKanji } from "@/lib/kanji";
 import { type CardState, newCard } from "@/lib/srs";
 import { type Progress, ProgressSchema, type ReadingContext, type ReadingLevel } from "./schema";
 
@@ -56,6 +57,7 @@ export function completeLesson(p: Progress, lesson: Lesson, now: Date): Progress
     if (s.kind === "newKana") return s.chars.map((c) => `kana:${c}`);
     return [];
   });
+  ids.push(...newKanji(lesson).map((k) => `kanji:${k.kanji}`));
   const cards = { ...p.cards };
   for (const id of ids) {
     if (!cards[id]) cards[id] = { card: newCard(now), updatedAt: now.toISOString() };

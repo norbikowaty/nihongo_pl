@@ -3,7 +3,9 @@ import { z } from "zod";
 import { courses } from "@/content/catalog";
 import { hiragana, katakana } from "@/content/kana";
 import { lessons } from "@/content/lessons";
+import { kanjiInfo } from "@/content/kanji";
 import { CourseSchema, LessonSchema } from "@/content/schema";
+import { kanjiIn, newKanji } from "@/lib/kanji";
 
 const baseCount = (rows: typeof hiragana) => rows.flatMap((r) => r.cells).filter(Boolean).length;
 
@@ -156,5 +158,28 @@ describe("lesson schema", () => {
 
   it("every lesson parses", () => {
     for (const l of lessons) expect(() => LessonSchema.parse(l)).not.toThrow();
+  });
+});
+
+describe("kanji in lessons", () => {
+  it("every kanji used in a lesson has readings and a meaning", () => {
+    for (const l of lessons) for (const c of kanjiIn(l)) expect(kanjiInfo(c), `${l.id}: ${c}`).toBeDefined();
+  });
+
+  it("a kanji is introduced at the start of the first lesson that uses it", () => {
+    for (const l of lessons) {
+      const fresh = newKanji(l);
+      if (fresh.length === 0) continue;
+      expect(l.kind, `${l.id} is a test and cannot introduce ${fresh.map((k) => k.kanji).join("")}`).toBe("lesson");
+      expect(l.steps[0].kind, l.id).toBe("intro");
+      for (const k of fresh) expect(k.example, `${l.id}: ${k.kanji} has no word with a reading`).toBeDefined();
+    }
+  });
+
+  it("the first grammar lesson introduces its kanji, later lessons only the new ones", () => {
+    const desu = lessons.find((l) => l.id === "gramatyka/pierwsze-zdania/desu")!;
+    const waDesu = lessons.find((l) => l.id === "gramatyka/pierwsze-zdania/wa-desu")!;
+    expect(newKanji(desu).map((k) => k.kanji)).toContain("学");
+    expect(newKanji(waDesu).map((k) => k.kanji)).toEqual(["私", "田", "中"]);
   });
 });

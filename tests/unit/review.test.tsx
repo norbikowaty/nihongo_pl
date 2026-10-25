@@ -32,7 +32,9 @@ describe("next lesson", () => {
 describe("cards", () => {
   it("describes word and kana cards", () => {
     expect(cardFace("word:hon")).toMatchObject({ meaning: "książka", reading: "ほん · hon" });
-    expect(cardFace("kana:し")).toMatchObject({ meaning: "znak hiragany", reading: "shi" });
+    expect(cardFace("kana:し")).toMatchObject({ tag: "znak hiragany", meaning: "hiragana", reading: "shi" });
+    expect(cardFace("kana:シ")).toMatchObject({ tag: "znak katakany", meaning: "katakana" });
+    expect(cardFace("kanji:学")).toMatchObject({ tag: "kanji", meaning: "nauka, uczyć się", reading: "ガク、まな(ぶ)" });
     expect(cardFace("word:nie-ma")).toBeUndefined();
   });
 });
