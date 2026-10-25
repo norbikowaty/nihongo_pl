@@ -45,6 +45,12 @@ export function clampStep(raw: string | undefined | null, total: number): number
   return Math.min(n, total);
 }
 
+export const PASS_RATIO = 0.8;
+
+export function testPassed(correct: number, total: number): boolean {
+  return total > 0 && correct / total >= PASS_RATIO;
+}
+
 const stepLabels: Record<Step["kind"], string> = {
   intro: "Wprowadzenie",
   newKana: "Nowe znaki",

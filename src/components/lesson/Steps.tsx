@@ -1,0 +1,125 @@
+import { Ja } from "@/components/ja/Ja";
+import { Prose } from "@/components/ja/Prose";
+import { allKana } from "@/content/kana";
+import type { Step } from "@/content/schema";
+import { Choice } from "./exercises/Choice";
+import { KanaQuiz } from "./exercises/KanaQuiz";
+import { SentenceBuilder } from "./exercises/SentenceBuilder";
+import { KanaStrokes } from "./KanaStrokes";
+
+function PlayButton() {
+  return (
+    <button
+      type="button"
+      disabled
+      aria-label="Odsłuchaj (nagrania wkrótce)"
+      title="Nagrania wkrótce"
+      className="inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-as text-ink opacity-60"
+    >
+      <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
+        <path d="M1 1l10 6-10 6z" fill="currentColor" />
+      </svg>
+    </button>
+  );
+}
+
+const romajiOf = (kana: string) => allKana.find((k) => k.kana === kana)?.romaji ?? "";
+
+export function StepView({ step }: { step: Step }) {
+  switch (step.kind) {
+    case "intro":
+      return (
+        <div>
+          <Prose text={step.lead} className="text-[22px]" />
+          <div className="mt-8 bg-bg px-9 py-8">
+            <Ja text={step.sentence.ja} size="xl" className="font-semibold" />
+            <p className="mt-1 text-[21px]">{step.sentence.pl}</p>
+          </div>
+          <div className="mt-7">
+            <Prose text={step.after} />
+          </div>
+        </div>
+      );
+    case "newKana":
+      return (
+        <div className="grid grid-cols-2 gap-4 min-[760px]:grid-cols-3">
+          {step.chars.map((c) => (
+            <div key={c} className="flex flex-col items-center gap-2 bg-bg p-5">
+              <span lang="ja" className="jp text-[72px] leading-none font-semibold">
+                {c}
+              </span>
+              <span className="text-[22px] font-semibold">{romajiOf(c)}</span>
+              <KanaStrokes char={c} />
+            </div>
+          ))}
+        </div>
+      );
+    case "pattern":
+      return (
+        <div className="flex flex-col gap-6">
+          {step.blocks.map((b, i) => (
+            <div key={i} className={`px-9 py-7 ${i === 0 ? "bg-bg" : "bg-as"}`}>
+              <Ja text={b.pattern} size={i === 0 ? "xl" : "lg"} className="font-semibold" />
+              <p className="mt-1 text-[21px]">{b.meaning}</p>
+            </div>
+          ))}
+          <Prose text={step.explanation} />
+        </div>
+      );
+    case "examples":
+      return (
+        <ul>
+          {step.items.map((e, i) => (
+            <li key={i} className="flex items-center gap-5 border-b border-ln py-4">
+              <PlayButton />
+              <div className="flex flex-col">
+                <Ja text={e.ja} className="font-semibold" />
+                <span>{e.pl}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      );
+    case "exercise":
+      return (
+        <div className="flex flex-col gap-2">
+          {step.items.map((ex, i) =>
+            ex.type === "build" ? (
+              <SentenceBuilder key={i} exercise={ex} />
+            ) : ex.type === "choice" ? (
+              <Choice key={i} exercise={ex} />
+            ) : (
+              <KanaQuiz key={i} exercise={ex} />
+            ),
+          )}
+        </div>
+      );
+    case "summary":
+      return (
+        <div>
+          <h2 className="mb-3.5 text-[26px] font-bold">Umiesz już</h2>
+          <ul className="flex list-disc flex-col gap-2 pl-6">
+            {step.points.map((p, i) => (
+              <li key={i}>
+                <Prose text={p} className="inline" />
+              </li>
+            ))}
+          </ul>
+          {step.words.length > 0 && (
+            <>
+              <h2 className="mt-9 mb-2.5 text-[22px] font-bold">Nowe słowa</h2>
+              <div className="grid grid-cols-2 gap-x-7 gap-y-2.5 min-[760px]:grid-cols-3">
+                {step.words.map((w) => (
+                  <div key={w.id} className="flex flex-col py-1.5">
+                    <Ja text={w.ja} className="font-semibold" />
+                    <span className="text-[17px]">{w.pl}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-6">Po zakończeniu lekcji te słowa trafią do powtórek.</p>
+            </>
+          )}
+        </div>
+      );
+  }
+}
