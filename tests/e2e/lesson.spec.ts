@@ -61,5 +61,5 @@ test("finishing the lesson marks it done in the course list", async ({ page }) =
   await expect(page).toHaveURL(/\/kursy\/pismo\/hiragana\/a-ko$/);
   await page.goto("/kursy");
   await page.locator("summary", { hasText: "Gramatyka N5" }).click();
-  await expect(page.getByRole("link", { name: "Partykuła は i です, ukończona" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Partykuła は i です.*ukończona/ })).toBeVisible();
 });

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { titleText } from "@/components/lesson/LessonTitle";
-import { LessonPlayer } from "@/components/lesson/LessonPlayer";
+import { LessonPlayer, LessonPlayerFromAddress } from "@/components/lesson/LessonPlayer";
 import { getLesson, lessons } from "@/content/lessons";
 
 type Params = { kurs: string; lekcja: string[] };
@@ -22,8 +22,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   const lesson = getLesson(kurs, lekcja.join("/"));
   if (!lesson) notFound();
   return (
-    <Suspense>
-      <LessonPlayer lesson={lesson} />
+    <Suspense fallback={<LessonPlayer lesson={lesson} />}>
+      <LessonPlayerFromAddress lesson={lesson} />
     </Suspense>
   );
 }

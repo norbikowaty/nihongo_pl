@@ -71,8 +71,12 @@ function KanjiList() {
   );
 }
 
-export function Dictionary() {
-  const kanji = useSearchParams().get("typ") === "kanji";
+/** Reads ?typ= from the address. Must sit inside <Suspense>; its fallback is <Dictionary /> showing words. */
+export function DictionaryFromAddress() {
+  return <Dictionary kanji={useSearchParams().get("typ") === "kanji"} />;
+}
+
+export function Dictionary({ kanji = false }: { kanji?: boolean }) {
   return (
     <div>
       <nav aria-label="Rodzaj" className="mb-8 flex gap-1.5">

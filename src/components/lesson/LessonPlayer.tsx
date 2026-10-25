@@ -19,7 +19,7 @@ function Breadcrumb({ lesson }: { lesson: Lesson }) {
   const section = course.sections.find((s) => s.id === lesson.section);
   return (
     <p className="text-base text-mu">
-      <Link href={`/kursy#${course.id}`} className="text-mu">
+      <Link href={`/kursy#${course.id}`} className="text-mu underline underline-offset-4">
         {course.title}
       </Link>
       {section && <> / {section.title}</>}
@@ -76,17 +76,26 @@ function TestRunner({ lesson }: { lesson: Lesson }) {
   );
 }
 
-export function LessonPlayer({ lesson }: { lesson: Lesson }) {
+/** Reads ?krok= from the address. Must sit inside <Suspense>; its fallback is LessonPlayer with no address. */
+export function LessonPlayerFromAddress({ lesson }: { lesson: Lesson }) {
   const params = useSearchParams();
+  return <LessonPlayer lesson={lesson} krok={params.get("krok")} paramStr={params.toString()} />;
+}
+
+export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: Lesson; krok?: string | null; paramStr?: string }) {
   const router = useRouter();
   const { update } = useProgress();
   const finish = useFinish(lesson);
   const top = useRef<HTMLHeadingElement>(null);
   const total = lesson.steps.length;
-  const step = clampStep(params.get("krok"), total);
+  // A click updates the step at once; the address catches up a moment later. A request made
+  // under an older address (e.g. before the browser's back button) is ignored.
+  const [requested, setRequested] = useState<{ from: string; step: number } | null>(null);
+  const step = requested?.from === paramStr ? requested.step : clampStep(krok, total);
   const current = lesson.steps[step - 1];
 
   const goTo = (n: number) => {
+    setRequested({ from: paramStr, step: n });
     router.replace(`?krok=${n}`, { scroll: false });
     update((p) => setLessonStep(p, lesson.id, n, new Date()));
     top.current?.scrollIntoView({ block: "start" });
@@ -119,6 +128,7 @@ export function LessonPlayer({ lesson }: { lesson: Lesson }) {
               key={i}
               type="button"
               role="tab"
+              aria-label={`Krok ${i + 1}: ${stepLabel(s.kind)}`}
               aria-selected={i + 1 === step}
               onClick={() => goTo(i + 1)}
               className={`flex min-w-0 flex-1 cursor-pointer flex-col gap-2 py-2.5 text-left text-base ${
