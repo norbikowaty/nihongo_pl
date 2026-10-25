@@ -35,7 +35,7 @@ export function CourseToc({
   return (
     <div>
       {courses.map((c) => {
-        const summary = courseSummary(c, progress);
+        const summary = courseSummary(c, progress, available);
         return (
           <details key={c.id} id={c.id} open={c.id === openCourse} className="group border-t-2 border-ink scroll-mt-20">
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-5 py-5 [&::-webkit-details-marker]:hidden">

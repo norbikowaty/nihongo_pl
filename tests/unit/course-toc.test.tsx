@@ -48,7 +48,9 @@ describe("lesson state", () => {
   it("course summary counts finished lessons", () => {
     const pismo = courses.find((c) => c.id === "pismo")!;
     expect(courseSummary(pismo, emptyProgress())).toBe("nie zaczęty");
-    expect(courseSummary(pismo, completeLesson(emptyProgress(), available[0], now))).toBe("1 / 21");
+    expect(courseSummary(pismo, completeLesson(emptyProgress(), available[0], now), available)).toBe("1 / 2");
+    const both = completeLesson(completeLesson(emptyProgress(), available[0], now), available[1], now);
+    expect(courseSummary(pismo, both, available)).toBe("gotowe lekcje ukończone");
   });
 });
 

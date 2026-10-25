@@ -36,12 +36,15 @@ export function lessonState(
   return nextLessonId(progress, list) === id ? "current" : "open";
 }
 
-export function courseSummary(course: Course, progress: Progress): string {
-  const ids = course.sections.flatMap((s) => s.items.map((i) => `${course.id}/${i.slug}`));
-  const done = ids.filter((id) => progress.lessons[id]?.status === "done").length;
+/** Progress counted against the lessons that exist so far, not the whole plan (no "1 / 45"). */
+export function courseSummary(course: Course, progress: Progress, list: Lesson[] = lessons): string {
+  const planned = course.sections.flatMap((s) => s.items.map((i) => i.slug));
+  const ready = planned.filter((slug) => isListed(list, course.id, slug)).map((slug) => `${course.id}/${slug}`);
+  const done = ready.filter((id) => progress.lessons[id]?.status === "done").length;
   if (done === 0) return "nie zaczęty";
-  if (done === ids.length) return "ukończony";
-  return `${done} / ${ids.length}`;
+  if (done === planned.length) return "ukończony";
+  if (done === ready.length) return "gotowe lekcje ukończone";
+  return `${done} / ${ready.length}`;
 }
 
 export function clampStep(raw: string | undefined | null, total: number): number {
