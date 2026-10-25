@@ -119,6 +119,27 @@ export const w = {
   kakimasu: jw("kakimasu", "{書|か}きます", "kakimasu", "pisać", ["書く", "かく"]),
   hanasu: jw("hanasu", "{話|はな}します", "hanashimasu", "mówić, rozmawiać", ["話す", "はなす"]),
 
+  // Gramatyka: przymiotniki
+  ookii: jw("ookii", "{大|おお}きい", "ōkii", "duży"),
+  chiisai: jw("chiisai", "{小|ちい}さい", "chiisai", "mały"),
+  takaiK: jw("takaiK", "{高|たか}い", "takai", "drogi; wysoki"),
+  yasui: jw("yasui", "やすい", "yasui", "tani", ["安い", "やすい"]),
+  atarashii: jw("atarashii", "あたらしい", "atarashii", "nowy", ["新しい", "あたらしい"]),
+  furui: jw("furui", "ふるい", "furui", "stary (o rzeczach)", ["古い", "ふるい"]),
+  omoshiroi: jw("omoshiroi", "おもしろい", "omoshiroi", "ciekawy, zabawny", ["面白い", "おもしろい"]),
+  do: kana("do", "どう", "dō", "jak (jaki jest)"),
+  shizuka: jw("shizuka", "しずか", "shizuka", "cichy, spokojny", ["静か", "しずか"]),
+  genki: jw("genki", "げんき", "genki", "zdrowy, pełen energii", ["元気", "げんき"]),
+  yumei: jw("yumei", "ゆうめい", "yūmei", "sławny", ["有名", "ゆうめい"]),
+  benri: jw("benri", "べんり", "benri", "wygodny, praktyczny", ["便利", "べんり"]),
+  sukina: jw("sukina", "すき", "suki", "lubiany (lubię)", ["好き", "すき"]),
+  kirai: jw("kirai", "きらい", "kirai", "nielubiany (nie lubię)", ["嫌い", "きらい"]),
+  shiroi: jw("shiroi", "{白|しろ}い", "shiroi", "biały"),
+  ii: kana("ii", "いい", "ii", "dobry"),
+  muzukashii: jw("muzukashii", "むずかしい", "muzukashii", "trudny", ["難しい", "むずかしい"]),
+  amari: kana("amari", "あまり", "amari", "niezbyt (z przeczeniem)"),
+  tenki: jw("tenki", "{天気|てんき}", "tenki", "pogoda"),
+
   // Pismo: hiragana
   au: { ...kana("au", "あう", "au", "spotkać (się)"), jmdict: "1198180" },
   ooi: { ...kana("ooi", "おおい", "ōi", "dużo, wiele"), jmdict: "1407460" },
