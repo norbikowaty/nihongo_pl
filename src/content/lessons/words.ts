@@ -163,6 +163,21 @@ export const w = {
   futari: kana("futari", "ふたり", "futari", "dwie osoby"),
   tamago: kana("tamago", "たまご", "tamago", "jajko"),
 
+  // Gramatyka: forma て
+  asagohan: kana("asagohan", "あさごはん", "asagohan", "śniadanie"),
+  kiku: jw("kiku", "{聞|き}きます", "kikimasu", "słuchać; pytać", ["聞く", "きく"]),
+  matsu: jw("matsu", "まちます", "machimasu", "czekać", ["待つ", "まつ"]),
+  yukkuri: kana("yukkuri", "ゆっくり", "yukkuri", "powoli"),
+  ame: jw("ame", "{雨|あめ}", "ame", "deszcz"),
+  furu: jw("furu", "ふります", "furimasu", "padać (o deszczu, śniegu)", ["降る", "ふる"]),
+  sumu: jw("sumu", "すみます", "sumimasu", "mieszkać", ["住む", "すむ"]),
+  chichi: jw("chichi", "{父|ちち}", "chichi", "(mój) tata"),
+  haha: jw("haha", "{母|はは}", "haha", "(moja) mama"),
+  hairu: jw("hairu", "{入|はい}ります", "hairimasu", "wchodzić", ["入る", "はいる"]),
+  toru: { ...jw("toru", "とります", "torimasu", "robić (zdjęcie)", ["撮る", "とる"]), jmdict: "1298790" },
+  suwaru: jw("suwaru", "すわります", "suwarimasu", "siadać", ["座る", "すわる"]),
+  dozo: kana("dozo", "どうぞ", "dōzo", "proszę (podając, zapraszając)"),
+
   // Pismo: hiragana
   au: { ...kana("au", "あう", "au", "spotkać (się)"), jmdict: "1198180" },
   ooi: { ...kana("ooi", "おおい", "ōi", "dużo, wiele"), jmdict: "1407460" },

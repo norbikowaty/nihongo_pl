@@ -85,6 +85,11 @@ export const lessonKanji: Kanji[] = [
   k("上", ["ジョウ"], ["うえ"], "góra, na", 3),
   k("下", ["カ", "ゲ"], ["した"], "dół, pod", 3),
   k("中", ["チュウ"], ["なか"], "środek, w", 4),
+  k("聞", ["ブン", "モン"], ["き.く", "き.こえる"], "słuchać, słyszeć", 14),
+  k("雨", ["ウ"], ["あめ"], "deszcz", 8),
+  k("父", ["フ"], ["ちち"], "ojciec", 4),
+  k("母", ["ボ"], ["はは"], "matka", 5),
+  k("入", ["ニュウ"], ["い.る", "はい.る"], "wchodzić", 2),
 ];
 
 const byChar = new Map([...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji].map((x) => [x.kanji, x]));
