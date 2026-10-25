@@ -55,6 +55,19 @@ body {
   font-family: var(--font-jp);
 }
 
+/* Even line lengths: headings balanced, paragraphs without a lone last word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
 /* In the base layer so utility classes on links (buttons, muted links) still win. */
 @layer base {
   a {
