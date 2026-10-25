@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { addTransitionType, startTransition, useEffect, useRef, useState, ViewTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 import { courses } from "@/content/catalog";
 import type { Exercise, Lesson } from "@/content/schema";
 import { newKanji } from "@/lib/kanji";
@@ -114,12 +114,13 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
   const [completedStep, setCompletedStep] = useState<number | null>(null);
   const canGoOn = current.kind !== "exercise" || step < reached || completedStep === step;
 
+  // Which way the last step change went, so the new step slides in from that side.
+  const [back, setBack] = useState(false);
+
   const goTo = (n: number) => {
-    startTransition(() => {
-      addTransitionType(n > step ? "step-forward" : "step-back");
-      setRequested({ from: paramStr, step: n });
-      router.replace(`?krok=${n}`, { scroll: false });
-    });
+    setBack(n < step);
+    setRequested({ from: paramStr, step: n });
+    router.replace(`?krok=${n}`, { scroll: false });
     update((p) => setLessonStep(p, lesson.id, n, new Date()));
     top.current?.scrollIntoView({ block: "start" });
   };
@@ -167,20 +168,13 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
           ))}
         </div>
         <div role="tabpanel" aria-label={stepLabel(current.kind)} className="mt-6 min-h-[540px] bg-sf px-6 py-10 min-[760px]:px-11">
-          <ViewTransition
-            key={step}
-            enter={{ "step-forward": "step-enter", "step-back": "step-enter-back", default: "none" }}
-            exit={{ "step-forward": "step-exit", "step-back": "step-exit", default: "none" }}
-            default="none"
-          >
-            <div>
-              <StepView
-                step={current}
-                kanji={current.kind === "intro" ? newKanji(lesson) : undefined}
-                onComplete={() => setCompletedStep(step)}
-              />
-            </div>
-          </ViewTransition>
+          <div key={step} className={back ? "step-in-back" : "step-in"}>
+            <StepView
+              step={current}
+              kanji={current.kind === "intro" ? newKanji(lesson) : undefined}
+              onComplete={() => setCompletedStep(step)}
+            />
+          </div>
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <button

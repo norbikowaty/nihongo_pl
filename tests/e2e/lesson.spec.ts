@@ -67,3 +67,10 @@ test("finishing the lesson marks it done in the course list", async ({ page }) =
   await page.locator("summary", { hasText: "Gramatyka N5" }).click();
   await expect(page.getByRole("link", { name: /Partykuła は i です.*ukończona/ })).toBeVisible();
 });
+
+test("an exercise step must be done before the summary opens", async ({ page }) => {
+  await page.goto(LESSON);
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Dalej" }).click();
+  await expect(page.getByRole("button", { name: "Podsumowanie" })).toBeDisabled();
+  await expect(page.getByRole("tab", { name: /Krok 5/ })).toHaveAttribute("aria-disabled", "true");
+});
