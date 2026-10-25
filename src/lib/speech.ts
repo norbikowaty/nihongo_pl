@@ -1,8 +1,11 @@
 import { useSyncExternalStore } from "react";
+import recordings from "@/content/audio.json";
 import type { JaText } from "@/content/schema";
 
-// Audio comes from the browser's own Japanese voice (Web Speech API). Everything goes through
-// speak(), so recorded files can replace it later without touching the lessons.
+// Lesson texts play from recordings in public/audio/ (made with scripts/make-audio.ts), so audio works in
+// every browser. Anything without a recording falls back to the browser's own Japanese voice, if it has one.
+
+const recorded = new Set<string>(recordings.files);
 
 const synth = () => (typeof window !== "undefined" && "speechSynthesis" in window ? window.speechSynthesis : null);
 
@@ -19,11 +22,6 @@ function subscribe(onChange: () => void) {
   return () => s?.removeEventListener("voiceschanged", onChange);
 }
 
-/** True once the browser offers a Japanese voice; false on the server and on devices without one. */
-export function useCanSpeak(): boolean {
-  return useSyncExternalStore(subscribe, () => bestVoice() !== undefined, () => false);
-}
-
 /**
  * What to say for a piece of Japanese. A single word is read from its furigana, so 何 is なん as
  * taught; a sentence is given as written, because the voice reads particles like は (wa) right
@@ -35,12 +33,39 @@ export function spokenText(text: JaText | string): string {
   return text.segs.map((s) => s.t).join("");
 }
 
+/** The text sent to the voice: gaps (＿) in exercise sentences are not read. */
+export const speechText = (text: JaText | string) => spokenText(text).replace(/[＿_]+/g, "");
+
+/** File name of a recording: FNV-1a of the text, so the script and the page agree without a lookup table. */
+export function audioKey(text: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193);
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+
+export const hasRecording = (text: JaText | string) => recorded.has(audioKey(speechText(text)));
+
+/** True when the text can be played: it has a recording, or the browser offers a Japanese voice. */
+export function useCanSpeak(text: JaText | string): boolean {
+  const voice = useSyncExternalStore(subscribe, () => bestVoice() !== undefined, () => false);
+  return hasRecording(text) || voice;
+}
+
+let playing: HTMLAudioElement | null = null;
+
 export function speak(text: JaText | string) {
+  const say = speechText(text);
+  playing?.pause();
+  synth()?.cancel();
+  if (recorded.has(audioKey(say))) {
+    playing = new Audio(`/audio/${audioKey(say)}.mp3`);
+    playing.play().catch(() => {});
+    return;
+  }
   const s = synth();
   const voice = bestVoice();
   if (!s || !voice) return;
-  s.cancel();
-  const u = new SpeechSynthesisUtterance(spokenText(text).replace(/[＿_]+/g, ""));
+  const u = new SpeechSynthesisUtterance(say);
   u.voice = voice;
   u.lang = voice.lang;
   // A little slower than normal speech, for learners.

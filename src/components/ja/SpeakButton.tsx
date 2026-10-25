@@ -3,9 +3,9 @@
 import type { JaText } from "@/content/schema";
 import { speak, spokenText, useCanSpeak } from "@/lib/speech";
 
-/** Plays the text with the browser's Japanese voice; invisible (but keeping its place) on devices without one. */
+/** Plays the recording of the text (or the browser's Japanese voice); invisible but keeping its place when neither exists. */
 export function SpeakButton({ text, size = "md", className = "" }: { text: JaText | string; size?: "sm" | "md"; className?: string }) {
-  const can = useCanSpeak();
+  const can = useCanSpeak(text);
   const box = size === "sm" ? "h-8 w-8" : "h-[42px] w-[42px]";
   return (
     <button
