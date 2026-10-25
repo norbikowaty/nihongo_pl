@@ -29,7 +29,7 @@ test("reload keeps the current step", async ({ page }) => {
 
 test("unknown and upcoming lessons show the not-found page", async ({ page }) => {
   // With Cache Components the not-found page streams with status 200 and a noindex tag.
-  for (const url of ["/kursy/gramatyka/to-i-tamto/kore-sore-are", "/kursy/xyz/abc"]) {
+  for (const url of ["/kursy/kanji/liczby-i-czas/liczby", "/kursy/xyz/abc"]) {
     await page.goto(url);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Nie ma takiej strony");
     expect(await page.locator('meta[name="robots"][content*="noindex"]').count()).toBeGreaterThan(0);
