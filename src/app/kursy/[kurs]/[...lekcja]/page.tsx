@@ -23,7 +23,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   if (!lesson) notFound();
   return (
     <Suspense fallback={<LessonPlayer lesson={lesson} />}>
-      <LessonPlayerFromAddress lesson={lesson} />
+      <LessonPlayerFromAddress key={lesson.id} lesson={lesson} />
     </Suspense>
   );
 }

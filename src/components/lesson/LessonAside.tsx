@@ -9,16 +9,19 @@ import { useProgress } from "@/lib/progress/useProgress";
 export function LessonAside({ lesson }: { lesson: Lesson }) {
   const { progress, update } = useProgress();
   const saved = progress.notes[lesson.id]?.text ?? "";
-  const [draft, setDraft] = useState<string | null>(null);
+  // The draft belongs to one lesson; Next may reuse this component for the next lesson.
+  const [draft, setDraft] = useState<{ lessonId: string; text: string } | null>(null);
+  const value = draft?.lessonId === lesson.id ? draft.text : saved;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const words = lesson.steps.flatMap((s) => (s.kind === "summary" ? s.words : []));
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const onChange = (text: string) => {
-    setDraft(text);
+    const lessonId = lesson.id;
+    setDraft({ lessonId, text });
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => update((p) => setNote(p, lesson.id, text, new Date())), 500);
+    timer.current = setTimeout(() => update((p) => setNote(p, lessonId, text, new Date())), 500);
   };
 
   return (
@@ -43,7 +46,7 @@ export function LessonAside({ lesson }: { lesson: Lesson }) {
         <textarea
           id={`note-${lesson.id}`}
           rows={5}
-          value={draft ?? saved}
+          value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Np. は czytam jako wa"
           className="w-full resize-y bg-bg p-3 text-[17px] text-ink"

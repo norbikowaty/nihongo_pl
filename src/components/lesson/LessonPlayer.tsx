@@ -41,10 +41,11 @@ function useFinish(lesson: Lesson) {
   };
 }
 
-function TestRunner({ lesson }: { lesson: Lesson }) {
+export function TestRunner({ lesson }: { lesson: Lesson }) {
   const items = lesson.steps.flatMap((s) => (s.kind === "exercise" ? s.items : []));
   const choices = items.filter((e): e is Extract<Exercise, { type: "choice" }> => e.type === "choice");
   const [answers, setAnswers] = useState<Record<number, boolean>>({});
+  const [attempt, setAttempt] = useState(0);
   const { update } = useProgress();
   const answered = Object.keys(answers).length;
   const correct = Object.values(answers).filter(Boolean).length;
@@ -58,15 +59,28 @@ function TestRunner({ lesson }: { lesson: Lesson }) {
   return (
     <div className="mt-6 bg-sf px-6 py-8 min-[760px]:px-11">
       {choices.map((ex, i) => (
-        <Choice key={i} exercise={ex} onAnswer={(ok) => setAnswers((a) => ({ ...a, [i]: ok }))} />
+        <Choice key={`${attempt}-${i}`} exercise={ex} onAnswer={(ok) => setAnswers((a) => ({ ...a, [i]: ok }))} />
       ))}
-      <div role="status" className="mt-8 min-h-12">
+      <div className="mt-8 min-h-12">
+        <p role="status" className="text-[24px] font-bold">
+          {finished && `Wynik: ${correct} z ${choices.length}. ${passed ? "Test zaliczony." : "Do zaliczenia potrzeba 80%."}`}
+        </p>
         {finished && (
-          <div className="flex flex-wrap items-center gap-5">
-            <p className="text-[24px] font-bold">
-              Wynik: {correct} z {choices.length}. {passed ? "Test zaliczony." : "Do zaliczenia potrzeba 80%."}
-            </p>
-            <Link href="/kursy" className={btnDark}>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {!passed && (
+              <button
+                type="button"
+                className={btnPrimary}
+                onClick={() => {
+                  setAnswers({});
+                  setAttempt(attempt + 1);
+                  window.scrollTo(0, 0);
+                }}
+              >
+                Spróbuj jeszcze raz
+              </button>
+            )}
+            <Link href="/kursy" className={`${btnDark} no-underline`}>
               Spis kursów
             </Link>
           </div>
