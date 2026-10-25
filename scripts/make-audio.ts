@@ -79,9 +79,13 @@ async function sayFor(t: Spoken, speaker: number): Promise<string> {
   return parts.join("").replace(/[＿_]+/g, "");
 }
 
-/** Readings compared loosely: particles は, へ, を sound wa, e, o; punctuation, accents and long marks are ignored. */
+const rows = ["アカサタナハマヤラワガザダバパャァ", "イキシチニヒミリギジヂビピィ", "ウクスツヌフムユルグズヅブプュゥ", "エケセテネヘメレゲゼデベペェ", "オコソトノホモヨロヲゴゾドボポョォ"];
+const vowelOf = (c: string) => "アイウエオ"[rows.findIndex((r) => r.includes(c))] ?? "";
+
+/** Readings compared loosely: particles は, へ, を sound wa, e, o; ー is the vowel before it; punctuation and accents are ignored. */
 const loose = (kana: string) =>
   asVoiced(kana)
+    .replace(/(.)ー/g, (_, c: string) => c + vowelOf(c))
     .replace(/[^ァ-ヶ]/g, "")
     .replace(/ハ/g, "ワ")
     .replace(/ヘ/g, "エ")
