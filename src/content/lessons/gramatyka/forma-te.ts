@@ -19,7 +19,7 @@ export const tworzenie = grammarLesson({
     { pattern: ja("{話|はな}します → {話|はな}して", "hanashimasu → hanashite"), meaning: "し → して" },
   ],
   explanation:
-    "Grupa 2 to głównie czasowniki z e przed ます (食べます, ねます) i kilka z i (見ます, おきます). Odcinasz ます i dodajesz て: 食べて, 見て, おきて.\n\nGrupa 1 zmienia się według sylaby przed ます:\nい, ち, り → って: かいます → かって, まちます → まって, かえります → かえって;\nみ, び, に → んで: のみます → のんで, 読みます → 読んで;\nき → いて: 書きます → 書いて, 聞きます → 聞いて (ぎ → いで);\nし → して: 話します → 話して.\n\nJeden wyjątek: 行きます → 行って.\n\nGrupa 3 to dwa czasowniki: します → して, 来ます → 来て (きて).\n\nForma て łączy czynności po kolei: あさごはんを食べて、学校へ行きます (zjem śniadanie i pójdę do szkoły).",
+    "Grupa 2 to głównie czasowniki z e przed ます (食べます, ねます) i kilka z i (見ます, おきます). Odcinasz ます i dodajesz て: 食べて, 見て, おきて.\n\nGrupa 1 zmienia się według sylaby przed ます. い, ち, り → って: かいます → かって, まちます → まって, かえります → かえって.\n\nみ, び, に → んで: のみます → のんで, 読みます → 読んで.\n\nき → いて: 書きます → 書いて, 聞きます → 聞いて (ぎ → いで).\n\nし → して: 話します → 話して.\n\nJeden wyjątek: 行きます → 行って.\n\nGrupa 3 to dwa czasowniki: します → して, 来ます → 来て (きて).\n\nForma て łączy czynności po kolei: あさごはんを食べて、学校へ行きます (zjem śniadanie i pójdę do szkoły).",
   examples: [
     ex("{本|ほん}を{読|よ}んで、ねます。", "Hon o yonde, nemasu.", "Poczytam i pójdę spać."),
     ex("あさごはんを{食|た}べて、{学校|がっこう}へ{行|い}きます。", "Asagohan o tabete, gakkō e ikimasu.", "Zjem śniadanie i pójdę do szkoły."),
