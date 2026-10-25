@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import type { Exercise, JaText } from "@/content/schema";
+import { order, useClientSeed } from "@/lib/random";
 import { btnPrimary, btnSecondary, jaText } from "./buttons";
 
 type Build = Extract<Exercise, { type: "build" }>;
 
-// Tiles are shown in a fixed shuffled order so the server and the browser render the same thing.
-function shuffledOrder(n: number): number[] {
-  return Array.from({ length: n }, (_, i) => i).sort((a, b) => ((a * 7 + 3) % n) - ((b * 7 + 3) % n));
+// The server renders a fixed mixed order; the browser then shuffles the tiles anew on every visit.
+function tileOrder(n: number, seed: number, salt: string, answer: number[]): number[] {
+  if (seed === 0) return Array.from({ length: n }, (_, i) => i).sort((a, b) => ((a * 7 + 3) % n) - ((b * 7 + 3) % n));
+  const ids = order(n, seed, salt);
+  // Never lay the tiles out already solved.
+  return answer.every((a, i) => ids[i] === a) ? ids.reverse() : ids;
 }
 
 function Tile({ ja, filled, label, onClick }: { ja: JaText; filled: boolean; label: string; onClick: () => void }) {
@@ -34,7 +38,7 @@ function Tile({ ja, filled, label, onClick }: { ja: JaText; filled: boolean; lab
 export function SentenceBuilder({ exercise, onDone }: { exercise: Build; onDone?: (ok: boolean) => void }) {
   const [built, setBuilt] = useState<number[]>([]);
   const [result, setResult] = useState<"ok" | "bad" | null>(null);
-  const order = shuffledOrder(exercise.tiles.length);
+  const tiles = tileOrder(exercise.tiles.length, useClientSeed(), exercise.prompt, exercise.answer);
   const ok = built.join(",") === exercise.answer.join(",");
   const first = jaText(exercise.tiles[exercise.answer[0]].ja.segs);
   const second = exercise.answer[1] !== undefined ? jaText(exercise.tiles[exercise.answer[1]].ja.segs) : "";
@@ -60,7 +64,7 @@ export function SentenceBuilder({ exercise, onDone }: { exercise: Build; onDone?
         {built.length === 0 && <span className="pl-2 text-[17px]">Kliknij słowa poniżej we właściwej kolejności.</span>}
       </div>
       <div className="mt-4 flex flex-wrap gap-2.5">
-        {order
+        {tiles
           .filter((i) => !built.includes(i))
           .map((i) => (
             <Tile

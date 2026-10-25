@@ -89,3 +89,16 @@ export const allKana = [hiragana, katakana, hiraganaDakuten, katakanaDakuten, hi
   .flat()
   .flatMap((r) => r.cells)
   .filter((c): c is KanaCell => c !== null);
+
+// Katakana and hiragana tables share their layout, so the same cell holds the same sound.
+const twins = new Map<string, string>();
+for (const [kata, hira] of [
+  [katakana, hiragana],
+  [katakanaDakuten, hiraganaDakuten],
+  [katakanaYoon, hiraganaYoon],
+] as const) {
+  kata.forEach((row, r) => row.cells.forEach((c, i) => c && twins.set(c.kana, hira[r].cells[i]!.kana)));
+}
+
+/** The hiragana for a katakana character with the same sound (ア → あ). */
+export const hiraganaTwin = (kana: string) => twins.get(kana);

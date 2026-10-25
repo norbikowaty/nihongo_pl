@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Ja } from "@/components/ja/Ja";
 import { Prose } from "@/components/ja/Prose";
-import { allKana } from "@/content/kana";
+import { allKana, hiraganaTwin } from "@/content/kana";
 import type { Exercise, Step } from "@/content/schema";
 import { Choice } from "./exercises/Choice";
-import { KanaQuiz } from "./exercises/KanaQuiz";
+import { KanaTrainer } from "./exercises/KanaTrainer";
 import { SentenceBuilder } from "./exercises/SentenceBuilder";
 import { KanaStrokes } from "./KanaStrokes";
 
@@ -45,7 +45,7 @@ function ExerciseStep({ items, onComplete }: { items: Exercise[]; onComplete?: (
         ) : ex.type === "choice" ? (
           <Choice key={i} exercise={ex} onAnswer={() => mark(i)} />
         ) : (
-          <KanaQuiz key={i} exercise={ex} onDone={() => mark(i)} />
+          <KanaTrainer key={i} exercise={ex} onDone={() => mark(i)} />
         ),
       )}
     </div>
@@ -76,6 +76,14 @@ export function StepView({ step, onComplete }: { step: Step; onComplete?: () => 
                 {c}
               </span>
               <span className="text-[22px] font-semibold">{romajiOf(c)}</span>
+              {hiraganaTwin(c) && (
+                <span className="text-base text-mu">
+                  w hiraganie{" "}
+                  <span lang="ja" className="jp text-ink">
+                    {hiraganaTwin(c)}
+                  </span>
+                </span>
+              )}
               <KanaStrokes char={c} />
             </div>
           ))}

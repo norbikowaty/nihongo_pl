@@ -34,9 +34,13 @@ const ChoiceSchema = z
   })
   .refine((e) => e.answer < e.options.length, "answer index out of range");
 
+const KanaItemSchema = z.object({ kana: z.string().min(1), romaji: z.string().min(1) });
+
 const KanaQuizSchema = z.object({
   type: z.literal("kana"),
-  items: z.array(z.object({ kana: z.string().min(1), romaji: z.string().min(1) })).min(2),
+  items: z.array(KanaItemSchema).min(2),
+  // Characters from earlier lessons; a few are mixed into the drill.
+  review: z.array(KanaItemSchema).optional(),
   choices: z.number().int().min(2).max(6),
 });
 

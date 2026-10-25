@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { Choice } from "@/components/lesson/exercises/Choice";
-import { KanaQuiz } from "@/components/lesson/exercises/KanaQuiz";
+import { KanaTrainer } from "@/components/lesson/exercises/KanaTrainer";
 import { SentenceBuilder } from "@/components/lesson/exercises/SentenceBuilder";
 import type { Exercise } from "@/content/schema";
 import { clampStep, stepLabel, testPassed } from "@/lib/lessons";
@@ -90,15 +90,32 @@ describe("Choice", () => {
   });
 });
 
-describe("KanaQuiz", () => {
-  it("reports score", async () => {
+describe("KanaTrainer", () => {
+  it("drills until every answer is right and reports once", async () => {
     const user = userEvent.setup();
-    render(<KanaQuiz exercise={kana} />);
-    for (let i = 0; i < 2; i++) {
-      const shown = screen.getByTestId("kana-quiz-char").textContent;
-      await user.click(screen.getByRole("button", { name: shown === "あ" ? "a" : "i" }));
-      await user.click(screen.getByRole("button", { name: i === 1 ? "Pokaż wynik" : "Dalej" }));
+    const done: number[] = [];
+    render(<KanaTrainer exercise={kana} onDone={(c) => done.push(c)} />);
+    await user.click(screen.getByRole("button", { name: "Zacznij trening" }));
+    const pairs: Record<string, string> = { あ: "a", い: "i", a: "あ", i: "い" };
+    let wrongOnce = false;
+    for (let guard = 0; guard < 10 && !screen.queryByRole("button", { name: "Jeszcze raz" }); guard++) {
+      const shown = screen.getByTestId("trainer-prompt").textContent!;
+      const right = pairs[shown];
+      if (!wrongOnce) {
+        // One wrong answer first: the question has to come back.
+        wrongOnce = true;
+        await user.click(screen.getByRole("button", { name: Object.values(pairs).find((v) => v !== right && /[あい]/.test(v) === /[あい]/.test(right))! }));
+        expect(screen.getByRole("status")).toHaveTextContent("wróci za chwilę");
+        await user.click(screen.getByRole("button", { name: "Dalej" }));
+      } else {
+        await user.click(screen.getByRole("button", { name: right }));
+        await screen.findByText(/^Dobrze/);
+        // A right answer moves on by itself after a moment.
+        await new Promise((r) => setTimeout(r, 700));
+      }
     }
-    expect(screen.getByRole("status")).toHaveTextContent("2 z 2");
+    expect(screen.getByText("Trening ukończony")).toBeInTheDocument();
+    expect(screen.getByText(/pomyłki: 1/)).toBeInTheDocument();
+    expect(done).toEqual([4]);
   });
 });

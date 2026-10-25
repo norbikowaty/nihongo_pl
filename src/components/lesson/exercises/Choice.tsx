@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Ja } from "@/components/ja/Ja";
 import { Prose } from "@/components/ja/Prose";
 import type { Exercise } from "@/content/schema";
+import { order, useClientSeed } from "@/lib/random";
 
 type ChoiceExercise = Extract<Exercise, { type: "choice" }>;
 
@@ -13,13 +14,16 @@ export function Choice({ exercise, onAnswer }: { exercise: ChoiceExercise; onAns
   const ok = picked === exercise.answer;
   // Whole sentences read better one per row than squeezed into a grid.
   const long = exercise.options.some((o) => o.length > 8);
+  // Options come in a new order on every visit, so the right answer is not remembered by its place.
+  const shown = order(exercise.options.length, useClientSeed(), exercise.prompt + exercise.options.join());
 
   return (
     <div className="border-b border-ln py-6">
       <Prose text={exercise.prompt} className="text-[20px]" />
       {exercise.ja && <Ja text={exercise.ja} size="lg" className="mt-2" />}
       <div className={`mt-4 grid gap-2.5 ${long ? "grid-cols-1" : "grid-cols-2 min-[760px]:grid-cols-4"}`}>
-        {exercise.options.map((o, i) => {
+        {shown.map((i) => {
+          const o = exercise.options[i];
           const tone = !answered
             ? "bg-bg text-ink"
             : i === exercise.answer
