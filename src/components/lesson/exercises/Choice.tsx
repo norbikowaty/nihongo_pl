@@ -36,7 +36,7 @@ export function Choice({ exercise, onAnswer }: { exercise: ChoiceExercise; onAns
                 setPicked(i);
                 onAnswer?.(i === exercise.answer);
               }}
-              className={`jp min-h-14 cursor-pointer px-5 font-semibold disabled:cursor-default ${long ? "text-left text-[20px]" : "text-[22px]"} ${tone}`}
+              className={`jp min-h-14 cursor-pointer px-5 font-semibold transition-colors duration-200 disabled:cursor-default ${long ? "text-left text-[20px]" : "text-[22px]"} ${tone}`}
             >
               <span lang="ja">{o}</span>
             </button>
@@ -45,9 +45,9 @@ export function Choice({ exercise, onAnswer }: { exercise: ChoiceExercise; onAns
       </div>
       <p role="status" className={`mt-3 min-h-[1.6em] ${ok ? "text-ok" : "text-ac"}`}>
         {answered && (
-          <>
+          <span className="rise block">
             <strong>{ok ? "Dobrze." : `Prawidłowo: ${exercise.options[exercise.answer]}.`}</strong> {exercise.why}
-          </>
+          </span>
         )}
       </p>
     </div>

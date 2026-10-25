@@ -38,7 +38,7 @@ export function TodayBlock() {
               {intro && <Ja text={intro.sentence.ja} size="lg" />}
               <div className="flex items-center gap-3.5">
                 <div className="h-[5px] flex-1 overflow-hidden bg-ln">
-                  <span className="block h-full bg-ac" style={{ width: `${((step - 1) / lesson.steps.length) * 100}%` }} />
+                  <span className="block h-full bg-ac transition-[width] duration-500 ease-out" style={{ width: `${((step - 1) / lesson.steps.length) * 100}%` }} />
                 </div>
                 <span className="text-[15px]">
                   krok {step} z {lesson.steps.length}

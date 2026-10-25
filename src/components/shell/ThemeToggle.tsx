@@ -18,7 +18,13 @@ export function ThemeToggle() {
 
   const toggle = () => {
     const next = !dark;
-    document.documentElement.classList.toggle("dark", next);
+    const apply = () => document.documentElement.classList.toggle("dark", next);
+    // Crossfade the colours where the browser supports it; elsewhere switch at once.
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.startViewTransition(apply);
+    } else {
+      apply();
+    }
     try {
       localStorage.setItem(THEME_KEY, next ? "dark" : "light");
     } catch {

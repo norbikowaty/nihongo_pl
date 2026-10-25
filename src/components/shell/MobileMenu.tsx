@@ -41,7 +41,7 @@ export function MobileMenu() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-x-0 top-16 z-30 flex flex-col gap-1 border-b border-ln bg-bg px-4 pt-2 pb-6"
+          className="rise fixed inset-x-0 top-16 z-30 flex flex-col gap-1 border-b border-ln bg-bg px-4 pt-2 pb-6"
         >
           <nav aria-label="Główne" className="flex flex-col">
             {navLinks.map((l) => (

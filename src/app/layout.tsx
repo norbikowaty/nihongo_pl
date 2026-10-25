@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Footer } from "@/components/shell/Footer";
 import { Header } from "@/components/shell/Header";
 import { ReadingSync } from "@/components/shell/ReadingSwitch";
+import { RouteTransition } from "@/components/shell/RouteTransition";
 import { ScrollToTop } from "@/components/shell/ScrollToTop";
 import "./globals.css";
 
@@ -46,7 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <Header />
         <main id="tresc" className="flex-1">
-          {children}
+          <RouteTransition>{children}</RouteTransition>
         </main>
         <Footer />
         <ScrollToTop />

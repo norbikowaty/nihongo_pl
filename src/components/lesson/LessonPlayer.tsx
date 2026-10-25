@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { addTransitionType, startTransition, useEffect, useRef, useState, ViewTransition } from "react";
 import { courses } from "@/content/catalog";
 import type { Exercise, Lesson } from "@/content/schema";
 import { clampStep, nextLessonId, stepLabel, testPassed } from "@/lib/lessons";
@@ -109,8 +109,11 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
   const current = lesson.steps[step - 1];
 
   const goTo = (n: number) => {
-    setRequested({ from: paramStr, step: n });
-    router.replace(`?krok=${n}`, { scroll: false });
+    startTransition(() => {
+      addTransitionType(n > step ? "step-forward" : "step-back");
+      setRequested({ from: paramStr, step: n });
+      router.replace(`?krok=${n}`, { scroll: false });
+    });
     update((p) => setLessonStep(p, lesson.id, n, new Date()));
     top.current?.scrollIntoView({ block: "start" });
   };
@@ -150,14 +153,23 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
               }`}
             >
               <span
-                className={`block h-1 w-full ${i + 1 < step ? "bg-ink" : i + 1 === step ? "bg-ac" : "bg-ln"}`}
+                className={`block h-1 w-full transition-colors duration-300 ${i + 1 < step ? "bg-ink" : i + 1 === step ? "bg-ac" : "bg-ln"}`}
               />
               <span className="hidden truncate min-[760px]:block">{stepLabel(s.kind)}</span>
             </button>
           ))}
         </div>
         <div role="tabpanel" aria-label={stepLabel(current.kind)} className="mt-6 min-h-[540px] bg-sf px-6 py-10 min-[760px]:px-11">
-          <StepView key={step} step={current} />
+          <ViewTransition
+            key={step}
+            enter={{ "step-forward": "step-enter", "step-back": "step-enter-back", default: "none" }}
+            exit={{ "step-forward": "step-exit", "step-back": "step-exit", default: "none" }}
+            default="none"
+          >
+            <div>
+              <StepView step={current} />
+            </div>
+          </ViewTransition>
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <button

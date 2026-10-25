@@ -97,8 +97,13 @@ export function SentenceBuilder({ exercise, onDone }: { exercise: Build; onDone?
           Od nowa
         </button>
         <span role="status" className={`text-[19px] ${result === "ok" ? "text-ok" : "text-ac"}`}>
-          {result === "ok" && `Dobrze: ${exercise.answer.map((i) => jaText(exercise.tiles[i].ja.segs)).join("")}`}
-          {result === "bad" && `Jeszcze nie. Zacznij od ${first}${second ? `, potem ${second}` : ""}.`}
+          {result && (
+            <span key={result} className="rise block">
+              {result === "ok"
+                ? `Dobrze: ${exercise.answer.map((i) => jaText(exercise.tiles[i].ja.segs)).join("")}`
+                : `Jeszcze nie. Zacznij od ${first}${second ? `, potem ${second}` : ""}.`}
+            </span>
+          )}
         </span>
       </div>
     </div>

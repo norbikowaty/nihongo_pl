@@ -61,8 +61,91 @@ body {
     color: var(--ink);
   }
 
+  a {
+    transition: color 150ms ease-out;
+  }
+
   a:hover {
     color: var(--ac);
+  }
+}
+
+/* Motion. Pages fade, lesson steps slide in the direction of travel, new content rises a little. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page-exit) {
+  animation: 120ms ease-in both vt-fade reverse;
+}
+
+::view-transition-new(.page-enter) {
+  animation:
+    220ms ease-out 80ms both vt-fade,
+    320ms cubic-bezier(0.2, 0.7, 0.2, 1) both vt-rise;
+}
+
+::view-transition-old(.step-exit) {
+  animation: 140ms ease-in both vt-fade reverse;
+}
+
+::view-transition-new(.step-enter) {
+  animation:
+    200ms ease-out 100ms both vt-fade,
+    340ms cubic-bezier(0.2, 0.7, 0.2, 1) both vt-slide;
+}
+
+::view-transition-new(.step-enter-back) {
+  --slide-from: -28px;
+  animation:
+    200ms ease-out 100ms both vt-fade,
+    340ms cubic-bezier(0.2, 0.7, 0.2, 1) both vt-slide;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    translate: 0 10px;
+  }
+}
+
+@keyframes vt-slide {
+  from {
+    translate: var(--slide-from, 28px) 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+.rise {
+  animation: rise 240ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  .rise {
+    animation: none;
   }
 }
 
