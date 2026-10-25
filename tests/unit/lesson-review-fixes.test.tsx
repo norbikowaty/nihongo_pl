@@ -88,4 +88,27 @@ describe("lesson fixes from the final review", () => {
     await user.click(screen.getByRole("button", { name: "b" }));
     expect(screen.getByRole("button", { name: "Dalej" })).toBeEnabled();
   });
+
+  it("the cheat sheet fills up step by step and is covered during an exercise", async () => {
+    const user = userEvent.setup();
+    const l: Lesson = {
+      ...lesson("d"),
+      steps: [
+        { kind: "newKana", chars: ["あ"] },
+        { kind: "exercise", items: [{ type: "choice", prompt: "1", options: ["a", "b"], answer: 0, why: "." }] },
+        { kind: "examples", items: [{ ja: ja("あお"), pl: "niebieski" }] },
+        { kind: "examples", items: [{ ja: ja("あお"), pl: "niebieski" }] },
+        { kind: "summary", points: ["x"], words: [{ id: "ao", ja: ja("あお"), pl: "niebieski" }] },
+      ],
+    };
+    const { rerender } = render(<LessonAside lesson={l} reached={1} />);
+    expect(screen.getByText("a")).toBeInTheDocument();
+    expect(screen.queryByText("niebieski")).toBeNull();
+    rerender(<LessonAside lesson={l} reached={2} covered />);
+    expect(screen.queryByText("a")).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Pokaż mimo to" }));
+    expect(screen.getByText("a")).toBeInTheDocument();
+    rerender(<LessonAside lesson={l} reached={3} />);
+    expect(screen.getByText("niebieski")).toBeInTheDocument();
+  });
 });

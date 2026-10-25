@@ -204,7 +204,7 @@ export function LessonPlayer({ lesson, krok = null, paramStr = "" }: { lesson: L
         </div>
       </div>
       <div className="min-[1000px]:pt-32">
-        <LessonAside lesson={lesson} />
+        <LessonAside lesson={lesson} reached={reached} covered={current.kind === "exercise" && step === reached} />
       </div>
     </div>
   );
