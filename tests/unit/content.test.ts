@@ -3,7 +3,7 @@ import { z } from "zod";
 import { courses } from "@/content/catalog";
 import { hiragana, katakana } from "@/content/kana";
 import { lessons } from "@/content/lessons";
-import { kanjiInfo } from "@/content/kanji";
+import { kanjiInfo, kanjiSets, lessonKanji, n5Kanji } from "@/content/kanji";
 import { CourseSchema, LessonSchema } from "@/content/schema";
 import { kanjiIn, newKanji } from "@/lib/kanji";
 
@@ -179,7 +179,20 @@ describe("kanji in lessons", () => {
   it("the first grammar lesson introduces its kanji, later lessons only the new ones", () => {
     const desu = lessons.find((l) => l.id === "gramatyka/pierwsze-zdania/desu")!;
     const waDesu = lessons.find((l) => l.id === "gramatyka/pierwsze-zdania/wa-desu")!;
+    const no = lessons.find((l) => l.id === "gramatyka/pierwsze-zdania/no")!;
     expect(newKanji(desu).map((k) => k.kanji)).toContain("学");
-    expect(newKanji(waDesu).map((k) => k.kanji)).toEqual(["私", "田", "中"]);
+    expect(newKanji(waDesu)).toEqual([]);
+    expect(newKanji(no).map((k) => k.kanji)).toEqual(["車", "語", "友"]);
+  });
+
+  it("lessons and kanji sets use only N5 kanji", () => {
+    for (const l of lessons) for (const c of kanjiIn(l)) expect(n5Kanji, `${l.id}: ${c}`).toContain(c);
+    for (const k of [...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji]) expect(n5Kanji).toContain(k.kanji);
+  });
+
+  it("words outside N5 appear only in the writing course", () => {
+    for (const l of lessons)
+      for (const s of l.steps)
+        if (s.kind === "summary") for (const x of s.words) if (x.beyondN5) expect(l.course, `${l.id}: ${x.id}`).toBe("pismo");
   });
 });

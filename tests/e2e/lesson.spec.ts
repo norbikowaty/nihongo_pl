@@ -39,7 +39,7 @@ test("unknown and upcoming lessons show the not-found page", async ({ page }) =>
 
 test("sentence builder accepts the right order", async ({ page }) => {
   await openStep(page, LESSON, 4);
-  for (const t of ["私", "は", "学生", "です"]) {
+  for (const t of ["わたし", "は", "学生", "です"]) {
     // The step also has a choice question with a は option; the sentence tiles come first.
     await page.getByRole("button", { name: t, exact: true }).first().click();
   }

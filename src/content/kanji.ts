@@ -1,4 +1,12 @@
 /** Kanji sets; readings use KANJIDIC2 notation (okurigana after "."). Checked with scripts/verify-kanji.ts. */
+
+/**
+ * The N5 kanji (Tanos list, which most N5 materials follow; JLPT has published no official list since 2010).
+ * Lessons use only these; a word whose kanji are beyond N5 is written in kana, as on the exam.
+ */
+export const n5Kanji =
+  "日一国人年大十二本中長出三時行見月分後前生五間上東四今金九入学高円子外八六下来気小七山話女北午百書先名川千水半男西電校語土木聞食車何南万毎白天母火右読友左休父雨";
+
 export type Kanji = { kanji: string; on: string[]; kun: string[]; meaning: string; strokes: number };
 
 const k = (kanji: string, on: string[], kun: string[], meaning: string, strokes: number): Kanji => ({
@@ -39,19 +47,10 @@ export const lessonKanji: Kanji[] = [
   k("先", ["セン"], ["さき"], "przód, wcześniej", 6),
   k("日", ["ニチ", "ジツ"], ["ひ", "-か"], "dzień, słońce", 4),
   k("人", ["ジン", "ニン"], ["ひと"], "człowiek", 2),
-  k("医", ["イ"], [], "medycyna, leczenie", 7),
-  k("者", ["シャ"], ["もの"], "osoba", 8),
-  k("会", ["カイ", "エ"], ["あ.う"], "spotkanie, spotykać", 6),
-  k("社", ["シャ"], ["やしろ"], "firma; chram", 7),
-  k("員", ["イン"], [], "członek, pracownik", 10),
-  k("私", ["シ"], ["わたし", "わたくし"], "ja; prywatny", 7),
-  k("田", ["デン"], ["た"], "pole ryżowe", 5),
-  k("中", ["チュウ"], ["なか"], "środek, w środku", 4),
   k("何", ["カ"], ["なに", "なん"], "co", 7),
   k("車", ["シャ"], ["くるま"], "samochód, pojazd", 7),
   k("語", ["ゴ"], ["かた.る"], "język, słowo", 14),
   k("友", ["ユウ"], ["とも"], "przyjaciel", 4),
-  k("達", ["タツ"], ["-たち"], "osiągać; po rzeczowniku: liczba mnoga osób", 12),
 ];
 
 const byChar = new Map([...kanjiSets.flatMap((s) => s.kanji), ...lessonKanji].map((x) => [x.kanji, x]));

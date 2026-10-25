@@ -53,7 +53,7 @@ export function reachedStep(p: Progress, lesson: Lesson): number {
 
 export function completeLesson(p: Progress, lesson: Lesson, now: Date): Progress {
   const ids = lesson.steps.flatMap((s) => {
-    if (s.kind === "summary") return s.words.map((w) => `word:${w.id}`);
+    if (s.kind === "summary") return s.words.filter((w) => !w.beyondN5).map((w) => `word:${w.id}`);
     if (s.kind === "newKana") return s.chars.map((c) => `kana:${c}`);
     return [];
   });

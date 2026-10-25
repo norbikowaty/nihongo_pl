@@ -9,6 +9,8 @@ export const WordSchema = z.object({
   ja: JaTextSchema,
   pl: z.string().min(1),
   jmdict: z.string().optional(),
+  /** Not on the N5 list: kept only to practise reading new kana, never added to reviews or the N5 dictionary. */
+  beyondN5: z.literal(true).optional(),
 });
 
 export const ExampleSchema = z.object({ ja: JaTextSchema, pl: z.string().min(1) });

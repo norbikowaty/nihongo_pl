@@ -6,7 +6,7 @@ import { Prose } from "@/components/ja/Prose";
 import { SpeakButton } from "@/components/ja/SpeakButton";
 import { allKana, hiraganaTwin } from "@/content/kana";
 import { kunLabel } from "@/content/kanji";
-import type { Exercise, Step } from "@/content/schema";
+import type { Exercise, Step, Word } from "@/content/schema";
 import type { NewKanji } from "@/lib/kanji";
 import { Choice } from "./exercises/Choice";
 import { KanaTrainer } from "./exercises/KanaTrainer";
@@ -40,6 +40,19 @@ function ExerciseStep({ items, onComplete }: { items: Exercise[]; onComplete?: (
 }
 
 /** Kanji the lesson uses for the first time, shown before the lesson goes on. */
+function WordGrid({ words }: { words: Word[] }) {
+  return (
+    <div className="grid grid-cols-2 gap-x-7 gap-y-2.5 min-[760px]:grid-cols-3">
+      {words.map((w) => (
+        <div key={w.id} className="flex flex-col py-1.5">
+          <Ja text={w.ja} className="font-semibold" />
+          <span className="text-[17px]">{w.pl}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function KanjiIntro({ kanji }: { kanji: NewKanji[] }) {
   return (
     <section aria-labelledby="nowe-kanji" className="mt-10 border-t-2 border-ink pt-6">
@@ -149,7 +162,9 @@ export function StepView({ step, kanji = [], onComplete }: { step: Step; kanji?:
       );
     case "exercise":
       return <ExerciseStep items={step.items} onComplete={onComplete} />;
-    case "summary":
+    case "summary": {
+      const studied = step.words.filter((w) => !w.beyondN5);
+      const readOnly = step.words.filter((w) => w.beyondN5);
       return (
         <div>
           <h2 className="mb-3.5 text-[26px] font-bold">Umiesz już</h2>
@@ -160,21 +175,24 @@ export function StepView({ step, kanji = [], onComplete }: { step: Step; kanji?:
               </li>
             ))}
           </ul>
-          {step.words.length > 0 && (
+          {studied.length > 0 && (
             <>
               <h2 className="mt-9 mb-2.5 text-[22px] font-bold">Nowe słowa</h2>
-              <div className="grid grid-cols-2 gap-x-7 gap-y-2.5 min-[760px]:grid-cols-3">
-                {step.words.map((w) => (
-                  <div key={w.id} className="flex flex-col py-1.5">
-                    <Ja text={w.ja} className="font-semibold" />
-                    <span className="text-[17px]">{w.pl}</span>
-                  </div>
-                ))}
-              </div>
+              <WordGrid words={studied} />
               <p className="mt-6">Po zakończeniu lekcji te słowa trafią do powtórek.</p>
+            </>
+          )}
+          {readOnly.length > 0 && (
+            <>
+              <h2 className="mt-9 mb-2.5 text-[22px] font-bold">Słowa do czytania</h2>
+              <WordGrid words={readOnly} />
+              <p className="mt-6 text-mu">
+                Tych słów nie ma w materiale N5, więc nie trafią do powtórek. Są tu tylko do ćwiczenia nowych znaków.
+              </p>
             </>
           )}
         </div>
       );
+    }
   }
 }

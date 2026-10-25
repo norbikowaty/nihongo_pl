@@ -7,16 +7,16 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "あ・い・う・え・お",
     minutes: 15,
     chars: ["あ", "い", "う", "え", "お"],
-    words: [w.ai, w.ao, w.ie, w.ue, w.iie, w.ooi],
+    words: [w.au, w.ao, w.ie, w.ue, w.iie, w.ooi],
     questions: [
-      readQuestion(w.ai, ["ia", "ae"], "あ to a, い to i."),
+      readQuestion(w.au, ["ua", "ao"], "あ to a, う to u."),
       readQuestion(w.ue, ["ie", "uo"], "う to u, え to e."),
       readQuestion(w.ooi, ["oi", "aoi"], "Dwa お obok siebie to jedno długie ō."),
     ],
     points: [
       "Znasz pięć samogłosek: あ a, い i, う u, え e, お o. Brzmią prawie jak polskie.",
       "Dwie takie same samogłoski obok siebie czytasz jako jedną długą: おおい ōi.",
-      "Czytasz już słowa あい, あお i いえ.",
+      "Czytasz już słowa あう, あお i いえ.",
     ],
   },
   {
@@ -41,16 +41,16 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "さ・し・す・せ・そ",
     minutes: 15,
     chars: ["さ", "し", "す", "せ", "そ"],
-    words: [w.asa, w.ashi, w.isu, w.sushi, w.kasa, w.sekai],
+    words: [w.asa, w.ashi, w.isu, w.kasa, w.oishii, w.asoko],
     questions: [
       readQuestion(w.ashi, ["asi", "asu"], "し czytasz shi, a nie si."),
-      readQuestion(w.sushi, ["susi", "shisu"], "す to su, し to shi."),
-      readQuestion(w.sekai, ["sakai", "sekoi"], "せ to se, か to ka, い to i."),
+      readQuestion(w.isu, ["ishu", "esu"], "い to i, す to su."),
+      readQuestion(w.asoko, ["asako", "osoko"], "そ to so, こ to ko."),
     ],
     points: [
       "W rzędzie S jest wyjątek: し czytasz shi.",
       "さ sa i き ki łatwo pomylić: き ma dwie poziome kreski, さ jedną.",
-      "Czytasz już słowa すし, いす i せかい.",
+      "Czytasz już słowa いす, おいしい i あそこ.",
     ],
   },
   {
@@ -92,17 +92,17 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "は・ひ・ふ・へ・ほ",
     minutes: 15,
     chars: ["は", "ひ", "ふ", "へ", "ほ"],
-    words: [w.hito, w.fune, w.hoshi, w.hana, w.fuku],
+    words: [w.hito, w.saifu, w.hoshii, w.hana, w.fuku],
     questions: [
-      readQuestion(w.fune, ["hune", "funa"], "ふ czytasz fu, z lekkim, miękkim f."),
-      readQuestion(w.hoshi, ["hosi", "hashi"], "ほ to ho, し to shi."),
+      readQuestion(w.saifu, ["saihu", "seifu"], "ふ czytasz fu, z lekkim, miękkim f."),
+      readQuestion(w.hoshii, ["hosii", "hashii"], "ほ to ho, し to shi."),
       readQuestion(w.hana, ["hano", "fana"], "は to ha, な to na."),
     ],
     points: [
       "ふ czytasz fu: wargi prawie się nie dotykają.",
       "は czytasz ha, ale jako partykuła brzmi wa. Poznasz ją w kursie gramatyki.",
       "は ha i ほ ho różnią się kreską u góry: ほ ma dwie poziome.",
-      "Czytasz już słowa ひと, はな i ほし.",
+      "Czytasz już słowa ひと, はな i さいふ.",
     ],
   },
   {
@@ -110,9 +110,9 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "ま・み・む・め・も",
     minutes: 15,
     chars: ["ま", "み", "む", "め", "も"],
-    words: [w.mimi, w.me, w.mono, w.mushi, w.machi, w.atama],
+    words: [w.mimi, w.me, w.mono, w.samui, w.machi, w.atama],
     questions: [
-      readQuestion(w.mushi, ["mushu", "moshi"], "む to mu, し to shi."),
+      readQuestion(w.samui, ["samoi", "somui"], "さ to sa, む to mu."),
       readQuestion(w.machi, ["mati", "mache"], "ま to ma, ち to chi."),
       readQuestion(w.atama, ["atame", "otama"], "あ to a, た to ta, ま to ma."),
     ],
@@ -127,7 +127,7 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "ら・り・る・れ・ろ",
     minutes: 15,
     chars: ["ら", "り", "る", "れ", "ろ"],
-    words: [w.haru, w.kuruma, w.sakura, w.kuroi, w.sora, w.tori],
+    words: [w.haru, w.kuruma, w.kirei, w.kuroi, w.sora, w.tori],
     questions: [
       readQuestion(w.kuruma, ["kurama", "koruma"], "る to ru, ま to ma."),
       readQuestion(w.sora, ["sona", "soro"], "そ to so, ら to ra."),
@@ -136,7 +136,7 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     points: [
       "Japońskie r brzmi między polskim r i l: jedno lekkie uderzenie języka.",
       "る ru i ろ ro różnią się dołem: る kończy się pętelką.",
-      "Czytasz już słowa はる, さくら i くるま.",
+      "Czytasz już słowa はる, きれい i くるま.",
     ],
   },
   {
@@ -144,11 +144,11 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "や・ゆ・よ・わ・を・ん",
     minutes: 20,
     chars: ["や", "ゆ", "よ", "わ", "を", "ん"],
-    words: [w.yama, w.yuki, w.yomu, w.kawa, w.mikan, w.heya],
+    words: [w.yama, w.yuki, w.yomu, w.kawa, w.takusan, w.heya],
     questions: [
       readQuestion(w.yuki, ["yoki", "yuku"], "ゆ to yu, き to ki."),
       readQuestion(w.kawa, ["kowa", "kara"], "か to ka, わ to wa."),
-      readQuestion(w.mikan, ["mikon", "makan"], "ん na końcu słowa to samo n."),
+      readQuestion(w.takusan, ["takusa", "takosan"], "ん na końcu słowa to samo n."),
     ],
     points: [
       "Rząd Y ma tylko trzy znaki: や ya, ゆ yu, よ yo.",
@@ -180,7 +180,7 @@ export const hiraganaLessons = pismoCourse("hiragana", [
     title: "ぱ–ぽ i małe znaki",
     minutes: 25,
     chars: ["ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "きゃ", "しゅ", "ちょ", "りょ", "じゃ"],
-    words: [w.kippu, w.densha, w.ryoko, w.shashin, w.sanpo, w.ginko],
+    words: [w.kippu, w.densha, w.ryoko, w.shashin, w.enpitsu, w.ginko],
     questions: [
       readQuestion(w.kippu, ["kipu", "kitsupu"], "Małe っ podwaja następną spółgłoskę: kippu."),
       readQuestion(w.densha, ["densya", "denshiya"], "しゃ to jedna sylaba: sha."),

@@ -14,26 +14,26 @@ export const no: Lesson = {
       kind: "intro",
       lead: "Partykuła の łączy dwa rzeczowniki. Najczęściej mówi, do kogo coś należy.",
       sentence: {
-        ja: { segs: [{ t: "私", r: "わたし" }, { t: "の" }, { t: "本", r: "ほん" }, { t: "です。" }], romaji: "Watashi no hon desu." },
+        ja: { segs: [{ t: "わたし" }, { t: "の" }, { t: "本", r: "ほん" }, { t: "です。" }], romaji: "Watashi no hon desu." },
         pl: "To moja książka.",
       },
-      after: "Szyk jest odwrotny niż w polskim: najpierw właściciel, potem rzecz. W 私の本 najpierw pada „ja”, a dopiero potem „książka”.",
+      after: "Szyk jest odwrotny niż w polskim: najpierw właściciel, potem rzecz. W わたしの本 najpierw pada „ja”, a dopiero potem „książka”.",
     },
     {
       kind: "pattern",
       blocks: [{ pattern: { segs: [{ t: "A の B" }], romaji: "A no B" }, meaning: "B osoby A, B od A, B dotyczące A" }],
       explanation:
-        "の pokazuje przynależność: 田中さんの車 to samochód pana Tanaki.\n\nMoże też opisywać rodzaj: 日本語の先生 to nauczyciel japońskiego, a nie nauczyciel należący do języka.\n\nPytając „czyje?”, używasz だれの: これはだれの本ですか。",
+        "の pokazuje przynależność: たなかさんの車 to samochód pana Tanaki.\n\nMoże też opisywać rodzaj: 日本語の先生 to nauczyciel japońskiego, a nie nauczyciel należący do języka.\n\nPytając „czyje?”, używasz だれの: これはだれの本ですか。",
     },
     {
       kind: "examples",
       items: [
         {
-          ja: { segs: [{ t: "私", r: "わたし" }, { t: "の" }, { t: "本", r: "ほん" }, { t: "です。" }], romaji: "Watashi no hon desu." },
+          ja: { segs: [{ t: "わたし" }, { t: "の" }, { t: "本", r: "ほん" }, { t: "です。" }], romaji: "Watashi no hon desu." },
           pl: "To moja książka.",
         },
         {
-          ja: { segs: [{ t: "田中", r: "たなか" }, { t: "さんの" }, { t: "車", r: "くるま" }, { t: "です。" }], romaji: "Tanaka-san no kuruma desu." },
+          ja: { segs: [{ t: "たなか" }, { t: "さんの" }, { t: "車", r: "くるま" }, { t: "です。" }], romaji: "Tanaka-san no kuruma desu." },
           pl: "To samochód pana Tanaki.",
         },
         {
@@ -53,9 +53,9 @@ export const no: Lesson = {
           type: "build",
           prompt: "To mój przyjaciel.",
           tiles: [
-            { ja: { segs: [{ t: "私", r: "わたし" }], romaji: "watashi" } },
+            { ja: { segs: [{ t: "わたし" }], romaji: "watashi" } },
             { ja: { segs: [{ t: "の" }], romaji: "no" } },
-            { ja: { segs: [{ t: "友達", r: "ともだち" }], romaji: "tomodachi" } },
+            { ja: { segs: [{ t: "友", r: "とも" }, { t: "だち" }], romaji: "tomodachi" } },
             { ja: { segs: [{ t: "です" }], romaji: "desu" } },
             { ja: { segs: [{ t: "は" }], romaji: "wa" } },
           ],
@@ -79,7 +79,7 @@ export const no: Lesson = {
     },
     {
       kind: "summary",
-      points: ["Mówisz, czyje coś jest: 私の本です。", "Opisujesz rodzaj: 日本語の先生。", "Pytasz „czyje?”: だれの本ですか。"],
+      points: ["Mówisz, czyje coś jest: わたしの本です。", "Opisujesz rodzaj: 日本語の先生。", "Pytasz „czyje?”: だれの本ですか。"],
       words: [w.nihongo, w.dare, w.tomodachi, w.watashi],
     },
   ],

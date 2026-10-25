@@ -27,13 +27,13 @@ export const ka: Lesson = {
         { pattern: { segs: [{ t: "いいえ、ちがいます。" }], romaji: "Iie, chigaimasu." }, meaning: "Nie, to nie tak." },
       ],
       explanation:
-        "Na pytanie „tak albo nie” odpowiadasz はい albo いいえ.\n\nPytając o rzecz, używasz 何 (なん): これは何ですか。 znaczy „Co to jest?”.\n\nあなた znaczy „ty”, ale Japończycy rzadko go używają. Grzeczniej jest zwrócić się po nazwisku z さん, np. 田中さん.",
+        "Na pytanie „tak albo nie” odpowiadasz はい albo いいえ.\n\nPytając o rzecz, używasz 何 (なん): これは何ですか。 znaczy „Co to jest?”.\n\nあなた znaczy „ty”, ale Japończycy rzadko go używają. Grzeczniej jest zwrócić się po nazwisku z さん, np. たなかさん.",
     },
     {
       kind: "examples",
       items: [
         {
-          ja: { segs: [{ t: "田中", r: "たなか" }, { t: "さんは" }, { t: "先生", r: "せんせい" }, { t: "ですか。" }], romaji: "Tanaka-san wa sensei desu ka." },
+          ja: { segs: [{ t: "たなか" }, { t: "さんは" }, { t: "先生", r: "せんせい" }, { t: "ですか。" }], romaji: "Tanaka-san wa sensei desu ka." },
           pl: "Czy pan Tanaka jest nauczycielem?",
         },
         { ja: { segs: [{ t: "はい、" }, { t: "先生", r: "せんせい" }, { t: "です。" }], romaji: "Hai, sensei desu." }, pl: "Tak, jest nauczycielem." },

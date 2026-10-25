@@ -162,9 +162,9 @@ export const courses: Course[] = [
         ["miejsca", "上 下 中 外 右 左 …", "10 znaków"],
       ]),
       section("natura-i-czynnosci", "Natura i czynności", [
-        ["natura", "山 川 田 雨 天 気 …", "10 znaków"],
-        ["czynnosci", "見 行 来 食 飲 …", "10 znaków"],
-        ["mowienie", "言 話 読 書 聞 …", "10 znaków"],
+        ["natura", "山 川 雨 天 気 …", "10 znaków"],
+        ["czynnosci", "見 行 来 食 休 …", "10 znaków"],
+        ["mowienie", "話 読 書 聞 語 …", "10 znaków"],
       ]),
     ],
   },

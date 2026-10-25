@@ -1,10 +1,11 @@
 import { lessons } from "@/content/lessons";
 import type { Word } from "@/content/schema";
 
-/** Every word taught in a lesson, once, in course order. */
+/** Every N5 word taught in a lesson, once, in course order. */
 export function allWords(): Word[] {
   const seen = new Map<string, Word>();
-  for (const l of lessons) for (const s of l.steps) if (s.kind === "summary") for (const w of s.words) seen.set(w.id, w);
+  for (const l of lessons)
+    for (const s of l.steps) if (s.kind === "summary") for (const w of s.words) if (!w.beyondN5) seen.set(w.id, w);
   return [...seen.values()];
 }
 

@@ -15,8 +15,10 @@ export type CardFace = {
   speech: string;
 };
 
+// Words outside N5 are only read in lessons; cards saved for them earlier are no longer shown.
 const words = new Map<string, Word>();
-for (const l of lessons) for (const s of l.steps) if (s.kind === "summary") for (const w of s.words) words.set(w.id, w);
+for (const l of lessons)
+  for (const s of l.steps) if (s.kind === "summary") for (const w of s.words) if (!w.beyondN5) words.set(w.id, w);
 
 const scriptOf = new Map<string, { romaji: string; script: string }>();
 for (const [rows, script] of [
@@ -64,4 +66,9 @@ export function cardFace(id: string): CardFace | undefined {
     };
   }
   return undefined;
+}
+
+/** Saved cards that can still be shown: cards for words since removed from the course are left out. */
+export function liveCards<T>(cards: Record<string, T>): Record<string, T> {
+  return Object.fromEntries(Object.entries(cards).filter(([id]) => cardFace(id) !== undefined));
 }

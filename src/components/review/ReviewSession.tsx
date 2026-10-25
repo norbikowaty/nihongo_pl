@@ -6,7 +6,7 @@ import { Ja } from "@/components/ja/Ja";
 import { SpeakButton } from "@/components/ja/SpeakButton";
 import { btnDark, btnPrimary, btnSecondary } from "@/components/lesson/exercises/buttons";
 import { titleText } from "@/components/lesson/LessonTitle";
-import { cardFace } from "@/lib/cards";
+import { cardFace, liveCards } from "@/lib/cards";
 import { nextLesson } from "@/lib/lessons";
 import { applyReview } from "@/lib/progress/store";
 import { useProgress } from "@/lib/progress/useProgress";
@@ -77,12 +77,10 @@ export function ReviewSession() {
   const [revealedId, setRevealedId] = useState<string | null>(null);
   const [reviewed, setReviewed] = useState(0);
   const [takeSoon, setTakeSoon] = useState(false);
-  const cards = progress.cards;
-  const known = (id: string) => cardFace(id) !== undefined;
-
   // Unknown ids (e.g. a word removed from the course) are skipped rather than shown blank.
-  const due = dueNow(cards).filter(known);
-  const soon = due.length === 0 && Object.keys(cards).length > 0 ? dueSoon(cards, new Date(), SOON).filter(known) : [];
+  const cards = liveCards(progress.cards);
+  const due = dueNow(cards);
+  const soon = due.length === 0 && Object.keys(cards).length > 0 ? dueSoon(cards, new Date(), SOON) : [];
   // A random but steady order for this visit, so cards are not remembered by their position.
   const queue = [...due, ...(takeSoon ? soon : [])].sort((a, b) => hash(a + seed) - hash(b + seed));
   const id = queue[0];

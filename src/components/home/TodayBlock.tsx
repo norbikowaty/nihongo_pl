@@ -5,6 +5,7 @@ import { Ja } from "@/components/ja/Ja";
 import { btnPrimary, btnSecondary } from "@/components/lesson/exercises/buttons";
 import { LessonTitle } from "@/components/lesson/LessonTitle";
 import { courses } from "@/content/catalog";
+import { liveCards } from "@/lib/cards";
 import { nextLesson } from "@/lib/lessons";
 import { useProgress } from "@/lib/progress/useProgress";
 import { dueNow, formatInterval, untilNextDue } from "@/lib/srs";
@@ -13,9 +14,10 @@ import { dueNow, formatInterval, untilNextDue } from "@/lib/srs";
 export function TodayBlock() {
   const { progress } = useProgress();
   const lesson = nextLesson(progress);
-  const due = dueNow(progress.cards).length;
+  const cards = liveCards(progress.cards);
+  const due = dueNow(cards).length;
   // Read the clock only with saved cards, so the prerendered page stays static.
-  const wait = due === 0 && Object.keys(progress.cards).length > 0 ? untilNextDue(progress.cards, new Date()) : undefined;
+  const wait = due === 0 && Object.keys(cards).length > 0 ? untilNextDue(cards, new Date()) : undefined;
   const started = Object.keys(progress.lessons).length > 0;
 
   const course = lesson && courses.find((c) => c.id === lesson.course);

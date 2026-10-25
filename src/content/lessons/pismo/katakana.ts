@@ -2,6 +2,7 @@ import { w } from "../words";
 import { pismoCourse, readQuestion } from "./make";
 
 // The first lesson takes two rows: with vowels alone there are almost no katakana words to read.
+// Where no N5 word can be built from the kana learned so far, the lesson reads words outside N5 (marked in words.ts).
 export const katakanaLessons = pismoCourse("katakana", [
   {
     slug: "a-ko",
@@ -59,7 +60,7 @@ export const katakanaLessons = pismoCourse("katakana", [
     title: "ナ・ニ・ヌ・ネ・ノ",
     minutes: 15,
     chars: ["ナ", "ニ", "ヌ", "ネ", "ノ"],
-    words: [w.tenisu, w.noto, w.nekutai, w.sunika],
+    words: [w.tenisu, w.noto, w.nekutai, w.sukato],
     questions: [
       readQuestion(w.tenisu, ["tenesu", "tanisu"], "テ to te, ニ to ni, ス to su."),
       readQuestion(w.noto, ["nato", "nōte"], "ノー to nō, ト to to."),
@@ -110,7 +111,7 @@ export const katakanaLessons = pismoCourse("katakana", [
     title: "ラ・リ・ル・レ・ロ",
     minutes: 15,
     chars: ["ラ", "リ", "ル", "レ", "ロ"],
-    words: [w.hoteru, w.kamera, w.karaoke, w.kurasu],
+    words: [w.hoteru, w.kamera, w.toire, w.kurasu],
     questions: [
       readQuestion(w.hoteru, ["hotaru", "hoteri"], "テ to te, ル to ru."),
       readQuestion(w.kamera, ["kamora", "kemera"], "メ to me, ラ to ra."),
@@ -119,7 +120,7 @@ export const katakanaLessons = pismoCourse("katakana", [
     points: [
       "Obce l i r zapisuje się tym samym rzędem: hotel → ホテル hoteru.",
       "ロ ro to prosty kwadrat.",
-      "Czytasz już słowa ホテル, カメラ i カラオケ.",
+      "Czytasz już słowa ホテル, カメラ i トイレ.",
     ],
   },
   {
@@ -127,11 +128,11 @@ export const katakanaLessons = pismoCourse("katakana", [
     title: "ヤ・ユ・ヨ・ワ・ヲ・ン",
     minutes: 20,
     chars: ["ヤ", "ユ", "ヨ", "ワ", "ヲ", "ン"],
-    words: [w.resutoran, w.ramen, w.wain, w.metoru],
+    words: [w.resutoran, w.hankachi, w.wain, w.metoru],
     questions: [
       readQuestion(w.resutoran, ["resutoron", "rasutoran"], "レ to re, ラン to ran."),
       readQuestion(w.wain, ["wein", "wani"], "ワ to wa, イ to i, ン to n."),
-      readQuestion(w.ramen, ["ramen", "rāmin"], "ラー to rā, メン to men."),
+      readQuestion(w.hankachi, ["hanchika", "honkachi"], "ハン to han, カ to ka, チ to chi."),
     ],
     points: [
       "ン n i ソ so różnią się ostatnią kreską: w ン idzie od dołu do góry.",
@@ -145,15 +146,15 @@ export const katakanaLessons = pismoCourse("katakana", [
     minutes: 25,
     chars: ["ガ", "ギ", "グ", "ゲ", "ゴ", "ザ", "ジ", "ズ", "ゼ", "ゾ", "ダ", "デ", "ド", "バ", "ビ", "ブ", "ベ", "ボ"],
     quiz: ["ガ", "ギ", "ゴ", "ザ", "ジ", "ズ", "ダ", "デ", "ド", "バ", "ビ", "ブ"],
-    words: [w.terebi, w.rajio, w.basu, w.gemu, w.doa],
+    words: [w.terebi, w.rajio, w.basu, w.doa, w.zubon, w.gita],
     questions: [
       readQuestion(w.terebi, ["terabi", "tereba"], "テ to te, レ to re, ビ to bi."),
-      readQuestion(w.gemu, ["gemu", "kēmu"], "ゲー to gē, ム to mu."),
+      readQuestion(w.zubon, ["subon", "zobon"], "ズ to zu, ボ to bo, ン to n."),
       readQuestion(w.doa, ["toa", "dōa"], "ド to do, ア to a."),
     ],
     points: [
       "Znaki ゛ działają tak samo jak w hiraganie: カ ka → ガ ga, ハ ha → バ ba.",
-      "Czytasz już słowa テレビ, ラジオ i ゲーム.",
+      "Czytasz już słowa テレビ, ラジオ i ズボン.",
     ],
   },
   {

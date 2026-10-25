@@ -28,7 +28,7 @@ export const desu: Lesson = {
         { ja: { segs: [{ t: "本", r: "ほん" }, { t: "です。" }], romaji: "Hon desu." }, pl: "To książka." },
         { ja: { segs: [{ t: "先生", r: "せんせい" }, { t: "です。" }], romaji: "Sensei desu." }, pl: "Jestem nauczycielem." },
         { ja: { segs: [{ t: "日本人", r: "にほんじん" }, { t: "です。" }], romaji: "Nihonjin desu." }, pl: "Jestem Japończykiem." },
-        { ja: { segs: [{ t: "医者", r: "いしゃ" }, { t: "です。" }], romaji: "Isha desu." }, pl: "Jestem lekarzem." },
+        { ja: { segs: [{ t: "いしゃ" }, { t: "です。" }], romaji: "Isha desu." }, pl: "Jestem lekarzem." },
       ],
     },
     {
@@ -38,7 +38,7 @@ export const desu: Lesson = {
           type: "build",
           prompt: "Jestem pracownikiem firmy.",
           tiles: [
-            { ja: { segs: [{ t: "会社員", r: "かいしゃいん" }], romaji: "kaishain" } },
+            { ja: { segs: [{ t: "かいしゃいん" }], romaji: "kaishain" } },
             { ja: { segs: [{ t: "です" }], romaji: "desu" } },
             { ja: { segs: [{ t: "は" }], romaji: "wa" } },
           ],

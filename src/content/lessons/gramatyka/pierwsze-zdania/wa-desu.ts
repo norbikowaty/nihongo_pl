@@ -14,7 +14,7 @@ export const waDesu: Lesson = {
       kind: "intro",
       lead: "Najczęstsze zdanie w japońskim ma dwie części gramatyczne: は i です.",
       sentence: {
-        ja: { segs: [{ t: "私", r: "わたし" }, { t: "は" }, { t: "学生", r: "がくせい" }, { t: "です。" }], romaji: "Watashi wa gakusei desu." },
+        ja: { segs: [{ t: "わたし" }, { t: "は" }, { t: "学生", r: "がくせい" }, { t: "です。" }], romaji: "Watashi wa gakusei desu." },
         pl: "Jestem studentem.",
       },
       after: "W tej lekcji zbudujesz takie zdanie, zaprzeczysz je i przedstawisz siebie oraz innych.",
@@ -29,23 +29,23 @@ export const waDesu: Lesson = {
         },
       ],
       explanation:
-        "Gdy は jest partykułą, czytasz je „wa”, a nie „ha”. Stoi po słowie, o którym mówisz.\n\nです zamyka zdanie i sprawia, że brzmi grzecznie. Zwykle czytasz je jak „des”, z ledwo słyszalnym u na końcu.\n\nGdy wiadomo, o kim mowa, Japończycy często pomijają 私は. Samo 学生です。 też znaczy „Jestem studentem”.",
+        "Gdy は jest partykułą, czytasz je „wa”, a nie „ha”. Stoi po słowie, o którym mówisz.\n\nです zamyka zdanie i sprawia, że brzmi grzecznie. Zwykle czytasz je jak „des”, z ledwo słyszalnym u na końcu.\n\nGdy wiadomo, o kim mowa, Japończycy często pomijają わたしは. Samo 学生です。 też znaczy „Jestem studentem”.",
     },
     {
       kind: "examples",
       items: [
         {
-          ja: { segs: [{ t: "私", r: "わたし" }, { t: "は" }, { t: "学生", r: "がくせい" }, { t: "です。" }], romaji: "Watashi wa gakusei desu." },
+          ja: { segs: [{ t: "わたし" }, { t: "は" }, { t: "学生", r: "がくせい" }, { t: "です。" }], romaji: "Watashi wa gakusei desu." },
           pl: "Jestem studentem.",
         },
         { ja: { segs: [{ t: "これは" }, { t: "本", r: "ほん" }, { t: "です。" }], romaji: "Kore wa hon desu." }, pl: "To jest książka." },
         {
-          ja: { segs: [{ t: "田中", r: "たなか" }, { t: "さんは" }, { t: "先生", r: "せんせい" }, { t: "です。" }], romaji: "Tanaka-san wa sensei desu." },
+          ja: { segs: [{ t: "たなか" }, { t: "さんは" }, { t: "先生", r: "せんせい" }, { t: "です。" }], romaji: "Tanaka-san wa sensei desu." },
           pl: "Pan Tanaka jest nauczycielem.",
         },
         {
           ja: {
-            segs: [{ t: "私", r: "わたし" }, { t: "は" }, { t: "先生", r: "せんせい" }, { t: "じゃありません。" }],
+            segs: [{ t: "わたし" }, { t: "は" }, { t: "先生", r: "せんせい" }, { t: "じゃありません。" }],
             romaji: "Watashi wa sensei ja arimasen.",
           },
           pl: "Nie jestem nauczycielem.",
@@ -59,7 +59,7 @@ export const waDesu: Lesson = {
           type: "build",
           prompt: "Jestem studentem.",
           tiles: [
-            { ja: { segs: [{ t: "私", r: "わたし" }], romaji: "watashi" } },
+            { ja: { segs: [{ t: "わたし" }], romaji: "watashi" } },
             { ja: { segs: [{ t: "は" }], romaji: "wa" } },
             { ja: { segs: [{ t: "学生", r: "がくせい" }], romaji: "gakusei" } },
             { ja: { segs: [{ t: "です" }], romaji: "desu" } },
@@ -78,7 +78,7 @@ export const waDesu: Lesson = {
         {
           type: "choice",
           prompt: "Jak powiesz: Nie jestem nauczycielem.",
-          options: ["私は先生です。", "私は先生じゃありません。", "私は先生ですか。"],
+          options: ["わたしは先生です。", "わたしは先生じゃありません。", "わたしは先生ですか。"],
           answer: 1,
           why: "じゃありません to przeczenie です.",
         },
@@ -86,7 +86,7 @@ export const waDesu: Lesson = {
     },
     {
       kind: "summary",
-      points: ["Mówisz, kim jesteś: 私は学生です。", "Nazywasz przedmiot: これは本です。", "Zaprzeczasz: 先生じゃありません。"],
+      points: ["Mówisz, kim jesteś: わたしは学生です。", "Nazywasz przedmiot: これは本です。", "Zaprzeczasz: 先生じゃありません。"],
       words: [w.watashi, w.gakusei, w.sensei, w.hon, w.kore, w.porandojin],
     },
   ],
