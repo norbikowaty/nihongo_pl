@@ -49,7 +49,7 @@ export function LessonAside({ lesson }: { lesson: Lesson }) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Np. は czytam jako wa"
-          className="w-full resize-y bg-bg p-3 text-[17px] text-ink"
+          className="max-h-[360px] min-h-[120px] w-full resize-y bg-bg p-3 text-[17px] text-ink"
         />
       </section>
     </aside>
