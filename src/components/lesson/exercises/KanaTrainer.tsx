@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { SpeakButton } from "@/components/ja/SpeakButton";
 import type { Exercise } from "@/content/schema";
 import { answerTask, type KanaItem, startTrainer, type Trainer, trainerFinished } from "@/lib/trainer";
 import { btnDark, btnPrimary } from "./buttons";
@@ -185,8 +186,9 @@ export function KanaTrainer({ exercise, onDone }: { exercise: KanaExercise; onDo
         {picked && (
           <div className={`rise flex w-full flex-col items-center gap-1 px-4 py-3 ${ok ? "text-ok" : "bg-as text-ink"}`}>
             {ok ? (
-              <p className="text-[20px] font-bold">
+              <p className="flex items-center gap-3 text-[20px] font-bold">
                 Dobrze: <span lang="ja" className="jp">{current.item.kana}</span> = {current.item.romaji}
+                <SpeakButton text={current.item.kana} size="sm" />
               </p>
             ) : (
               <>
@@ -197,6 +199,7 @@ export function KanaTrainer({ exercise, onDone }: { exercise: KanaExercise; onDo
                   </span>{" "}
                   czytasz <strong>{current.item.romaji}</strong>. Ten znak wróci za chwilę.
                 </p>
+                <SpeakButton text={current.item.kana} size="sm" />
                 {chosen && (
                   <p className="text-base text-mu">
                     Twój wybór:{" "}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Ja } from "@/components/ja/Ja";
+import { SpeakButton } from "@/components/ja/SpeakButton";
 import { btnDark, btnPrimary, btnSecondary } from "@/components/lesson/exercises/buttons";
 import { titleText } from "@/components/lesson/LessonTitle";
 import { cardFace } from "@/lib/cards";
@@ -171,18 +172,23 @@ export function ReviewSession() {
 
         <div className="min-h-[124px]">
           {revealed ? (
-            <dl className="rise grid border-t-2 border-ink min-[760px]:grid-cols-2">
-              <div className="flex flex-col gap-1 border-b border-ln py-4 min-[760px]:border-r min-[760px]:border-b-0 min-[760px]:pr-6">
-                <dt className="text-[15px] text-mu">{face.readingLabel}</dt>
-                <dd lang={face.tag === "kanji" ? "ja" : undefined} className="jp text-[26px] font-semibold">
-                  {face.reading}
-                </dd>
+            <>
+              <div className="rise -mt-4 mb-4 flex justify-center">
+                <SpeakButton text={face.speech} />
               </div>
-              <div className="flex flex-col gap-1 py-4 min-[760px]:pl-6">
-                <dt className="text-[15px] text-mu">{face.meaningLabel}</dt>
-                <dd className="text-[26px] font-semibold">{face.meaning}</dd>
-              </div>
-            </dl>
+              <dl className="rise grid border-t-2 border-ink min-[760px]:grid-cols-2">
+                <div className="flex flex-col gap-1 border-b border-ln py-4 min-[760px]:border-r min-[760px]:border-b-0 min-[760px]:pr-6">
+                  <dt className="text-[15px] text-mu">{face.readingLabel}</dt>
+                  <dd lang={face.tag === "kanji" ? "ja" : undefined} className="jp text-[26px] font-semibold">
+                    {face.reading}
+                  </dd>
+                </div>
+                <div className="flex flex-col gap-1 py-4 min-[760px]:pl-6">
+                  <dt className="text-[15px] text-mu">{face.meaningLabel}</dt>
+                  <dd className="text-[26px] font-semibold">{face.meaning}</dd>
+                </div>
+              </dl>
+            </>
           ) : (
             <div className="flex flex-col items-center gap-2 pt-4">
               <button type="button" className={btnDark} onClick={() => setRevealedId(id)}>

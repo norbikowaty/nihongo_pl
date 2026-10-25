@@ -11,6 +11,8 @@ export type CardFace = {
   readingLabel: string;
   meaning: string;
   meaningLabel: string;
+  /** What the play button says: kana, so the voice reads it as taught. */
+  speech: string;
 };
 
 const words = new Map<string, Word>();
@@ -39,13 +41,14 @@ export function cardFace(id: string): CardFace | undefined {
       readingLabel: "Czytanie",
       meaning: w.pl,
       meaningLabel: "Znaczenie",
+      speech: kana,
     };
   }
   if (kind === "kana") {
     const k = scriptOf.get(key);
     if (!k) return undefined;
     const front = { segs: [{ t: key }], romaji: "" };
-    return { front, tag: `znak ${k.script.slice(0, -1)}y`, reading: k.romaji, readingLabel: "Czytanie", meaning: k.script, meaningLabel: "Alfabet" };
+    return { front, tag: `znak ${k.script.slice(0, -1)}y`, reading: k.romaji, readingLabel: "Czytanie", meaning: k.script, meaningLabel: "Alfabet", speech: key };
   }
   if (kind === "kanji") {
     const k = kanjiInfo(key);
@@ -57,6 +60,7 @@ export function cardFace(id: string): CardFace | undefined {
       readingLabel: "Czytania",
       meaning: k.meaning,
       meaningLabel: "Znaczenie",
+      speech: key,
     };
   }
   return undefined;
