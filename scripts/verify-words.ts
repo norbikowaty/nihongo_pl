@@ -2,7 +2,7 @@
 // Usage: npx tsx scripts/verify-words.ts
 // Prints the JMdict id and English glosses next to our Polish meaning; exits 1 if a word or reading is not in JMdict.
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { lessons } from "../src/content/lessons";
 import { w } from "../src/content/lessons/words";
