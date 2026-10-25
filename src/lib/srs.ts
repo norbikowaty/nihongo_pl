@@ -44,6 +44,11 @@ export function dueIds(cards: Record<string, { card: CardState }>, now: Date): s
     .map(([id]) => id);
 }
 
+/** Due cards right now. Reads the clock only when there are cards, so prerendering an empty progress stays static. */
+export function dueNow(cards: Record<string, { card: CardState }>): string[] {
+  return Object.keys(cards).length === 0 ? [] : dueIds(cards, new Date());
+}
+
 const MIN = 60_000;
 const HOUR = 60 * MIN;
 const DAY = 24 * HOUR;

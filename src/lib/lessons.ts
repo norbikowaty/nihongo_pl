@@ -19,6 +19,11 @@ export function nextLessonId(progress: Progress, list: Lesson[] = lessons): stri
   )?.id;
 }
 
+export function nextLesson(progress: Progress, list: Lesson[] = lessons): Lesson | undefined {
+  const id = nextLessonId(progress, list);
+  return list.find((l) => l.id === id);
+}
+
 export function lessonState(
   course: CourseId,
   slug: string,
