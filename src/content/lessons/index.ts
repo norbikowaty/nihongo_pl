@@ -4,6 +4,7 @@ import { ka } from "./gramatyka/pierwsze-zdania/ka";
 import { no } from "./gramatyka/pierwsze-zdania/no";
 import { pierwszeZdaniaTest } from "./gramatyka/pierwsze-zdania/test";
 import { waDesu } from "./gramatyka/pierwsze-zdania/wa-desu";
+import { czasownikiMasuTest, masen, masenka, mashita, masu } from "./gramatyka/czasowniki-masu";
 import { ceny, daty, godziny, liczby, liczbyICzasTest } from "./gramatyka/liczby-i-czas";
 import { dareDoreDoko, kokoSokoAsoko, konoSonoAno, koreSoreAre, toITamtoTest } from "./gramatyka/to-i-tamto";
 import { hiraganaLessons } from "./pismo/hiragana";
@@ -27,6 +28,11 @@ export const lessons: Lesson[] = [
   daty,
   ceny,
   liczbyICzasTest,
+  masu,
+  masen,
+  mashita,
+  masenka,
+  czasownikiMasuTest,
 ];
 
 export function getLesson(course: string, slug: string): Lesson | undefined {

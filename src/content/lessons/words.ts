@@ -83,6 +83,25 @@ export const w = {
   en: jw("en", "{円|えん}", "en", "jen (japońska waluta)"),
   kudasai: kana("kudasai", "ください", "kudasai", "proszę dać, poproszę"),
 
+  // Gramatyka: czasowniki ます
+  iku: jw("iku", "{行|い}きます", "ikimasu", "iść, jechać", ["行く", "いく"]),
+  kuru: jw("kuru", "{来|き}ます", "kimasu", "przychodzić, przyjeżdżać", ["来る", "くる"]),
+  kaeru: jw("kaeru", "かえります", "kaerimasu", "wracać (do domu)", ["帰る", "かえる"]),
+  okiru: jw("okiru", "おきます", "okimasu", "wstawać", ["起きる", "おきる"]),
+  neru: jw("neru", "ねます", "nemasu", "iść spać, spać", ["寝る", "ねる"]),
+  hataraku: jw("hataraku", "はたらきます", "hatarakimasu", "pracować", ["働く", "はたらく"]),
+  benkyo: jw("benkyo", "べんきょうします", "benkyō shimasu", "uczyć się", ["勉強", "べんきょう"]),
+  mainichi: kana("mainichi", "まいにち", "mainichi", "codziennie"),
+  yoru: { ...kana("yoru", "よる", "yoru", "wieczór, noc"), jmdict: "1536350" },
+  yasumu: jw("yasumu", "{休|やす}みます", "yasumimasu", "odpoczywać, mieć wolne", ["休む", "やすむ"]),
+  maiasa: kana("maiasa", "まいあさ", "maiasa", "co rano"),
+  kesa: kana("kesa", "けさ", "kesa", "dziś rano"),
+  senshu: kana("senshu", "せんしゅう", "senshū", "w zeszłym tygodniu"),
+  hayaku: jw("hayaku", "はやく", "hayaku", "wcześnie, szybko", ["早い", "はやい"]),
+  issho: jw("issho", "いっしょに", "issho ni", "razem", ["一緒", "いっしょ"]),
+  chotto: kana("chotto", "ちょっと", "chotto", "trochę, chwilę"),
+  ee: kana("ee", "ええ", "ē", "tak (mniej oficjalnie)"),
+
   // Pismo: hiragana
   au: { ...kana("au", "あう", "au", "spotkać (się)"), jmdict: "1198180" },
   ooi: { ...kana("ooi", "おおい", "ōi", "dużo, wiele"), jmdict: "1407460" },
