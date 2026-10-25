@@ -7,6 +7,7 @@ import { waDesu } from "./gramatyka/pierwsze-zdania/wa-desu";
 import { czasownikiMasuTest, masen, masenka, mashita, masu } from "./gramatyka/czasowniki-masu";
 import { de, niE, o, partykulyTest, toMo } from "./gramatyka/partykuly";
 import { i, na, przeczenie, przeszly, przymiotnikiTest } from "./gramatyka/przymiotniki";
+import { arimasuImasu, istnienieTest, liczniki, ni, pozycje } from "./gramatyka/istnienie";
 import { ceny, daty, godziny, liczby, liczbyICzasTest } from "./gramatyka/liczby-i-czas";
 import { dareDoreDoko, kokoSokoAsoko, konoSonoAno, koreSoreAre, toITamtoTest } from "./gramatyka/to-i-tamto";
 import { hiraganaLessons } from "./pismo/hiragana";
@@ -45,6 +46,11 @@ export const lessons: Lesson[] = [
   przeczenie,
   przeszly,
   przymiotnikiTest,
+  arimasuImasu,
+  ni,
+  pozycje,
+  liczniki,
+  istnienieTest,
 ];
 
 export function getLesson(course: string, slug: string): Lesson | undefined {
