@@ -39,11 +39,11 @@ export function CourseToc({
         return (
           <details key={c.id} id={c.id} open={c.id === openCourse} className="group border-t-2 border-ink scroll-mt-20">
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-5 py-5 [&::-webkit-details-marker]:hidden">
-              <span lang="ja" className="jp w-[52px] shrink-0 text-4xl leading-none">
+              <span lang="ja" className="jp w-10 shrink-0 text-3xl leading-none min-[760px]:w-[52px] min-[760px]:text-4xl">
                 {c.glyph}
               </span>
-              <span className="flex flex-1 flex-col">
-                <span className="text-2xl leading-tight font-bold">{c.title}</span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <h2 className="text-[21px] leading-tight font-bold min-[760px]:text-2xl">{c.title}</h2>
                 <span className="text-[17px] text-mu">{c.meta}</span>
               </span>
               <span className={`text-[17px] whitespace-nowrap ${summary.includes("/") ? "text-ac" : "text-mu"}`}>
@@ -71,7 +71,10 @@ export function CourseToc({
                           <span className="w-[18px] shrink-0 text-ac" aria-hidden="true">
                             {marks[state]}
                           </span>
-                          <span className={`flex-1 ${state === "current" ? "font-bold" : ""}`}>{item.title}</span>
+                          <span className={`min-w-0 flex-1 ${state === "current" ? "font-bold" : ""}`}>
+                            {item.title}
+                            {state === "done" && <span className="sr-only"> (ukończona)</span>}
+                          </span>
                           <span className="text-[15px] whitespace-nowrap text-mu">
                             {state === "soon" ? "wkrótce" : item.label}
                           </span>
@@ -85,7 +88,6 @@ export function CourseToc({
                             <Link
                               href={`/kursy/${c.id}/${item.slug}`}
                               className="flex items-baseline gap-3 py-1.5 text-[17px] no-underline"
-                              aria-label={`${item.title}${state === "done" ? ", ukończona" : ""}`}
                             >
                               {body}
                             </Link>

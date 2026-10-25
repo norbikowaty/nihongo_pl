@@ -55,12 +55,15 @@ body {
   font-family: var(--font-jp);
 }
 
-a {
-  color: var(--ink);
-}
+/* In the base layer so utility classes on links (buttons, muted links) still win. */
+@layer base {
+  a {
+    color: var(--ink);
+  }
 
-a:hover {
-  color: var(--ac);
+  a:hover {
+    color: var(--ac);
+  }
 }
 
 /* Reading aid: 0 = kanji and kana only, 1 = furigana, 2 = furigana and rōmaji. */
